@@ -1,0 +1,12 @@
+{:host "0.0.0.0"
+ :port 8080
+ :wd ""
+ :dir {:root "www" ;; http server root
+       :post "posts" ;; where `.md` file stays, processed `.html` file will be under www/post
+       :file "files"
+       :template "templates"
+       :snippet "snippets"
+       :asset "assets"}
+ :meta {
+        :template "template"
+        :title "title"}}

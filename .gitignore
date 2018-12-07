@@ -1,0 +1,7 @@
+*/*
+!.gitignore
+!README.md
+!deps.edn
+!src/*
+!resources/*
+!test/*
