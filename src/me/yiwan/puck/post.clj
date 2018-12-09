@@ -8,7 +8,7 @@
 (def parser
   (insta/parser
     "<Post> = Meta Content
-     <Meta> = Metamarker Metaline+ Metamarker
+     <Meta> = (Metamarker Metaline+ Metamarker EOL)
      Metaline = Metakey Colon <Space> Metavalue EOL
      Metakey = #'[0-9a-zA-Z_]+'
      Metavalue = Word
@@ -58,6 +58,7 @@
   (reduce str
     (for [b blocks]
       (case (first b)
+        :Metaline ""
         :List (hiccup/html [:ul (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
         :Ordered (hiccup/html [:ol (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
         :Header (hiccup/html [(first (last b)) (apply str (map generate-inlines (take (- (count b) 2) (drop 1 b))))])
@@ -90,7 +91,7 @@
 
 (defn parse-content
   [str] 
-  (let [res (parser str :start :Content)]
+  (let [res (parser str)]
        (if (instance? gll/failure-type res)
            (print res)
            res)))
@@ -101,4 +102,4 @@
         content (-> txt parse-content generate-blocks)
         template-function (some-> meta seek-template-name resolve-template-function)]
     (if (some? template-function)
-        (template-function content))))
+        (reduce str (template-function content)))))

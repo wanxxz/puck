@@ -2,13 +2,13 @@
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [mount.core :refer [defstate]]
-            [net.cgrand.enlive-html :as html]
-            [net.cgrand.reload]
+            [net.cgrand.enlive-html :as enlive-html]
+            [net.cgrand.reload :as enlive-reload]
             [me.yiwan.puck.conf :refer [conf]])
   (:import java.nio.file.FileSystems))
 
 ;; each time a resource or file used by a template/snippet is updated the namespace is reloaded 
-(net.cgrand.reload/auto-reload *ns*)
+(enlive-reload/auto-reload *ns*)
 
 (def path (.getPath (io/file (:wd conf) (-> conf :dir :template))))
 
@@ -19,9 +19,9 @@
   `(intern
      'me.yiwan.puck.template
      (symbol (str "template-" ~name))
-     (html/template ~file 
+     (enlive-html/template ~file 
        [content#]
-       [:div.content-placeholder] (html/content content#))))
+       [:div.content-placeholder] (enlive-html/html-content content#))))
 
 (defn find-template-files
   []
