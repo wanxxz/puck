@@ -15,11 +15,11 @@
 (def pattern #".*\.html$")
 
 (defmacro generate-template-function
-  [name path]
+  [name file]
   `(intern
      'me.yiwan.puck.template
      (symbol (str "template-" ~name))
-     (html/template ~path 
+     (html/template ~file 
        [content#]
        [:div.content-placeholder] (html/content content#))))
 
@@ -29,4 +29,4 @@
    (fn [file] [(fs/base-name file true) file])
    (fs/find-files path pattern)))
 
-(defstate template :start (doseq [[n p] (find-template-files)] (generate-template-function n p)))
+(defstate template :start (doseq [[n f] (find-template-files)] (generate-template-function n f)))
