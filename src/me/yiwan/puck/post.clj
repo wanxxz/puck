@@ -14,7 +14,7 @@
      Metavalue = Word (Whitespace Word)*
      <Metamarker> = <#'[-]{3}'> EOL
      <Colon> = <':'>
-     <Content> = (Paragraph | Header | List | Ordered | Code | Rule)+
+     <Content> = (Paragraph | Header | List | Ordered | Code | Rule)*
      Header = Line Headerline Blankline+
      <Headerline> = h1 | h2
      h1 = '='+
