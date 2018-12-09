@@ -2,7 +2,6 @@
   (:require [clojure.java.io :refer [file]]
             [hiccup.core :as hiccup]
             [instaparse.core :as insta]
-            [instaparse.gll :as gll]
             [me.yiwan.puck.conf :refer [conf]]))
 
 (def parser
@@ -86,12 +85,15 @@
 
 (defn parse-meta
   [str]
-  (parser str :start :Meta :partial true))
+  (let [res (parser str :start :Meta :partial true)]
+    (if (insta/failure? res)
+      (print res)
+      res)))
 
 (defn parse-content
   [str]
   (let [res (parser str)]
-    (if (instance? gll/failure-type res)
+    (if (insta/failure? res)
       (print res)
       res)))
 
