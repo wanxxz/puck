@@ -2,6 +2,7 @@
   (:require [clojure.java.io :refer [file]]
             [hiccup.core :as hiccup]
             [instaparse.core :as insta]
+            [instaparse.gll :as gll]
             [me.yiwan.puck.conf :refer [conf]]))
 
 (def parser
@@ -89,7 +90,10 @@
 
 (defn parse-content
   [str] 
-  (parser str :start :Content))
+  (let [res (parser str :start :Content)]
+       (if (instance? gll/failure-type res)
+           (print res)
+           res)))
 
 (defn generate-html
   [txt]
