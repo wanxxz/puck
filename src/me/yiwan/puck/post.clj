@@ -67,12 +67,13 @@
 (defn seek-template-name
   [meta]
   ;; ignore duplicate meta, use last one
-  (last (for [m meta]
-             (let [key (-> m second last)
-                   value (-> m last last)]
-                  (if (not= key (-> conf :meta :template))
-                      (println (format "meta not found: %s" (-> conf :meta :template)))
-                      value)))))
+  (let [template-meta-name (-> conf :meta :template)
+        meta (map #(hash-map :key (-> % second last) :value (-> % last last)) meta)
+        res (filter #(= (:key %) template-meta-name) meta)]
+    (if (empty? res)
+      (println (format "meta not found: %s" template-meta-name))
+      (:value (last res)))))
+
 
 (defn resolve-template-function
   [value]
@@ -94,6 +95,6 @@
   [txt]
   (let [meta (parse-meta txt)
         content (-> txt parse-content generate-blocks)
-        template-function (-> meta seek-template-name resolve-template-function)]
+        template-function (some-> meta seek-template-name resolve-template-function)]
     (if (some? template-function)
         (template-function content))))
