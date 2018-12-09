@@ -11,7 +11,7 @@
      <Meta> = (Metamarker Metaline+ Metamarker EOL)
      Metaline = Metakey Colon <Space> Metavalue EOL
      Metakey = #'[0-9a-zA-Z_]+'
-     Metavalue = Word
+     Metavalue = Word (Whitespace Word)*
      <Metamarker> = <#'[-]{3}'> EOL
      <Colon> = <':'>
      <Content> = (Paragraph | Header | List | Ordered | Code | Rule)+
