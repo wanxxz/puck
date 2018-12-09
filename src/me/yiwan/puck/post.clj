@@ -99,8 +99,9 @@
 
 (defn generate-html
   [txt]
-  (let [meta (parse-meta txt)
-        content (-> txt parse-content generate-blocks)
-        template-function (some-> meta seek-template-name resolve-template-function)]
-    (if (some? template-function)
-      (reduce str (template-function content)))))
+  (let [meta (parse-meta txt)]
+    (if (not (nil? meta))
+      (let [content (-> txt parse-content generate-blocks)
+            template-function (some-> meta seek-template-name resolve-template-function)]
+        (if (some? template-function)
+          (reduce str (template-function content)))))))
