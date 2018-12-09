@@ -9,7 +9,7 @@
             [me.yiwan.puck.conf :refer [conf]]))
 
 (if (env :dev)
-    (mount/start))
+  (mount/start))
 
 (def exit (chan 1))
 
@@ -20,16 +20,16 @@
                :parse-fn #(.getAbsolutePath (io/file %))
                :validate [#(fs/directory? %) "not a directory"]]
               ["-h" "--help"]]]
-       (parse-opts args opts)))
+    (parse-opts args opts)))
 
 (defn -main
   [& args]
   (let [res (parse-args args)]
     (if (empty? (:errors res))
-        (do
-          (mount/start-with-args (:options res))
-          (println (format "server start %s:%d" (conf :host) (conf :port))))
-        (do
-          (println (:errors res))
-          (>!! exit 0))))
+      (do
+        (mount/start-with-args (:options res))
+        (println (format "server start %s:%d" (conf :host) (conf :port))))
+      (do
+        (println (:errors res))
+        (>!! exit 0))))
   (<!! exit))

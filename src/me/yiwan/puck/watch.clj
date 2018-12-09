@@ -12,11 +12,11 @@
   [_ e]
   (println (format "%s" (:file e)))
   (let [f (io/file (:wd conf) (-> conf :dir :root) (-> conf :dir :post) (str (fs/base-name (:file e) true) ".html"))]
-       (if (not (fs/file? f))
-           (.createNewFile f))
-       (spit
-         f
-         (generate-html (slurp (:file e))))))
+    (if (not (fs/file? f))
+      (.createNewFile f))
+    (spit
+     f
+     (generate-html (slurp (:file e))))))
 
 (defstate watch
   :start (hawk/watch! [{:paths [post-path] :filter hawk/file? :handler post-handler}])

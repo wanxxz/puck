@@ -17,11 +17,11 @@
 (defmacro generate-template-function
   [name file]
   `(intern
-     'me.yiwan.puck.template
-     (symbol (str "template-" ~name))
-     (enlive-html/template ~file 
-       [content#]
-       [:div.content-placeholder] (enlive-html/html-content content#))))
+    'me.yiwan.puck.template
+    (symbol (str "template-" ~name))
+    (enlive-html/template ~file
+                          [content#]
+                          [:div.content-placeholder] (enlive-html/html-content content#))))
 
 (defn find-template-files
   []

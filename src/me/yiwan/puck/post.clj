@@ -7,7 +7,7 @@
 
 (def parser
   (insta/parser
-    "<Post> = Meta Content
+   "<Post> = Meta Content
      <Meta> = (Metamarker Metaline+ Metamarker EOL)
      Metaline = Metakey Colon <Space> Metavalue EOL
      Metakey = #'[0-9a-zA-Z_]+'
@@ -56,15 +56,15 @@
 
 (defn generate-blocks [blocks]
   (reduce str
-    (for [b blocks]
-      (case (first b)
-        :Metaline ""
-        :List (hiccup/html [:ul (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
-        :Ordered (hiccup/html [:ol (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
-        :Header (hiccup/html [(first (last b)) (apply str (map generate-inlines (take (- (count b) 2) (drop 1 b))))])
-        :Code (hiccup/html [:pre [:code (apply str (interpose "<br />" (for [line (drop 1 b)] (apply str (drop 1 line)))))]])
-        :Rule (hiccup/html [:hr])
-        :Paragraph (hiccup/html [:p (apply str (map generate-inlines (drop 1 b)))])))))
+          (for [b blocks]
+            (case (first b)
+              :Metaline ""
+              :List (hiccup/html [:ul (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
+              :Ordered (hiccup/html [:ol (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
+              :Header (hiccup/html [(first (last b)) (apply str (map generate-inlines (take (- (count b) 2) (drop 1 b))))])
+              :Code (hiccup/html [:pre [:code (apply str (interpose "<br />" (for [line (drop 1 b)] (apply str (drop 1 line)))))]])
+              :Rule (hiccup/html [:hr])
+              :Paragraph (hiccup/html [:p (apply str (map generate-inlines (drop 1 b)))])))))
 
 (defn seek-template-name
   [meta]
@@ -76,25 +76,24 @@
       (println (format "meta not found: %s" template-meta-name))
       (:value (last res)))))
 
-
 (defn resolve-template-function
   [value]
   (let [s (symbol (str (-> conf :meta :template) "-" value))
         t (ns-resolve 'me.yiwan.puck.template s)]
-       (if (nil? t)
-           (println (format "template not found: %s" value))
-           t)))
+    (if (nil? t)
+      (println (format "template not found: %s" value))
+      t)))
 
 (defn parse-meta
   [str]
   (parser str :start :Meta :partial true))
 
 (defn parse-content
-  [str] 
+  [str]
   (let [res (parser str)]
-       (if (instance? gll/failure-type res)
-           (print res)
-           res)))
+    (if (instance? gll/failure-type res)
+      (print res)
+      res)))
 
 (defn generate-html
   [txt]
@@ -102,4 +101,4 @@
         content (-> txt parse-content generate-blocks)
         template-function (some-> meta seek-template-name resolve-template-function)]
     (if (some? template-function)
-        (reduce str (template-function content)))))
+      (reduce str (template-function content)))))

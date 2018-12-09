@@ -9,7 +9,7 @@
 ;; check post file
 (s/def ::not-blank #(not (blank? %)))
 
-(s/def ::file-eof #(not (nil? (re-find #"^(.|\n)*[\n]{2,}$" %)))) 
+(s/def ::file-eof #(not (nil? (re-find #"^(.|\n)*[\n]{2,}$" %))))
 
 (s/def ::post-content
   (s/with-gen
@@ -45,13 +45,13 @@
   :args (s/cat :str ::post-content)
   :ret ::markdown-blocks)
 
-(s/fdef generate-html 
+(s/fdef generate-html
   :args (s/cat :blocks ::markdown-blocks)
   :ret string?)
 
 (comment
   ;; meta
-  (parse-meta (slurp (file "test" "post" "2018-12-01-meta-only.md"))) 
+  (parse-meta (slurp (file "test" "post" "2018-12-01-meta-only.md")))
 
   (s/conform ::post-content "words\n\n")
   (s/conform ::post-content "文字\n\n")
