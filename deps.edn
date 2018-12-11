@@ -8,8 +8,7 @@
         enlive                 {:mvn/version "1.1.6"}
         mount                  {:mvn/version "0.1.14"}
         cprop                  {:mvn/version "0.1.13"}
-        hawk                   {:mvn/version "0.2.11"}
-        environ                {:mvn/version "1.1.0"}}
+        hawk                   {:mvn/version "0.2.11"}}
 
  :paths ["src" "resources" "test"]
 

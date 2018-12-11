@@ -5,11 +5,7 @@
             [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [mount.core :as mount]
-            [environ.core :refer [env]]
             [me.yiwan.puck.conf :refer [conf]]))
-
-(if (env :dev)
-  (mount/start))
 
 (defn parse-args
   [args]
