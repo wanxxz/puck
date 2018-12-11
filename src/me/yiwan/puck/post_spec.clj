@@ -1,4 +1,4 @@
-(ns me.yiwan.puck.post.spec
+(ns me.yiwan.puck.post-spec
   (:require [clojure.pprint :refer [pprint]]
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
