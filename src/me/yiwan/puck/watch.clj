@@ -6,8 +6,6 @@
             [me.yiwan.puck.conf :refer [conf]]
             [me.yiwan.puck.post :refer [generate-html]]))
 
-(def post-path (.getPath (io/file (:wd conf) (-> conf :dir :post))))
-
 (defn post-handler
   [_ e]
   (println (format "%s" (:file e)))
@@ -19,5 +17,6 @@
      (generate-html (slurp (:file e))))))
 
 (defstate watch
-  :start (hawk/watch! [{:paths [post-path] :filter hawk/file? :handler post-handler}])
+  :start (hawk/watch! (let [post-path (.getPath (io/file (:wd conf) (-> conf :dir :post)))]
+                        [{:paths [post-path] :filter hawk/file? :handler post-handler}]))
   :stop  (hawk/stop! watch))
