@@ -19,17 +19,24 @@
                :default (.getAbsolutePath fs/*cwd*)
                :parse-fn #(.getAbsolutePath (io/file %))
                :validate [#(fs/directory? %) "not a directory"]]
+              ["-i" "--init" "Initialize"]
               ["-h" "--help"]]]
     (parse-opts args opts)))
 
 (defn -main
   [& args]
-  (let [res (parse-args args)]
-    (if (empty? (:errors res))
-      (do
-        (mount/start-with-args (:options res))
-        (println (format "server start %s:%d" (conf :host) (conf :port))))
-      (do
-        (println (:errors res))
-        (>!! exit 0))))
-  (<!! exit))
+  (let [{:keys [options errors]} (parse-args args)]
+    (cond
+      errors
+      (do (println errors) (>!! exit 0))
+      (:init options)
+      (->
+       (mount/except [#'me.yiwan.puck.watch/watch])
+       (mount/with-args options)
+       mount/start)
+      options
+      (->
+       (mount/with-args options)
+       mount/start))
+      ;; (println (format "server start %s:%d" (conf :host) (conf :port))))
+    (<!! exit)))
