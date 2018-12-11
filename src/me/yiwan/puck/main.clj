@@ -11,8 +11,6 @@
 (if (env :dev)
   (mount/start))
 
-(def exit (chan 1))
-
 (defn parse-args
   [args]
   (let [opts [["-w" "--working-directory path" "Wroking directory"
@@ -25,7 +23,8 @@
 
 (defn -main
   [& args]
-  (let [{:keys [options errors]} (parse-args args)]
+  (let [exit (chan 1)
+        {:keys [options errors]} (parse-args args)]
     (cond
       errors
       (do (println errors) (>!! exit 0))
