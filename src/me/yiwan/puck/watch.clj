@@ -6,17 +6,25 @@
             [me.yiwan.puck.conf :refer [conf]]
             [me.yiwan.puck.post :refer [generate-html]]))
 
-(defn post-handler
-  [_ e]
-  (println (format "%s" (:file e)))
-  (let [f (io/file (:wd conf) (-> conf :dir :root) (-> conf :dir :post) (str (fs/base-name (:file e) true) ".html"))]
-    (if (not (fs/file? f))
-      (.createNewFile f))
-    (spit
-     f
-     (generate-html (slurp (:file e))))))
+(defn create-watcher
+  [dir]
+  (hawk/watch!
+   [{:paths [(.getPath (io/file (:wd conf) (-> conf :dir dir)))]
+     :filter hawk/file?
+     :handler (fn [_ e]
+                (println (format "%s" (:file e)))
+                (let [f (io/file
+                         (:wd conf)
+                         (-> conf :dir :root)
+                         (-> conf :dir dir)
+                         (str (fs/base-name (:file e) true) ".html"))]
+                  (if (not (fs/file? f)) (.createNewFile f))
+                  (spit f (generate-html (slurp (:file e))))))}]))
 
 (defstate watch
-  :start (hawk/watch! (let [post-path (.getPath (io/file (:wd conf) (-> conf :dir :post)))]
-                        [{:paths [post-path] :filter hawk/file? :handler post-handler}]))
-  :stop  (hawk/stop! watch))
+  :start {:post (create-watcher :post)
+          :page (create-watcher :page)}
+
+  :stop  (do
+           (hawk/stop! (:post watch))
+           (hawk/stop! (:post watch))))
