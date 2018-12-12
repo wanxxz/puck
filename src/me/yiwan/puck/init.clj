@@ -1,7 +1,11 @@
 (ns me.yiwan.puck.init
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
-            [me.yiwan.puck.conf :refer [conf]]))
+            [cprop.core :refer [load-config]]
+            [mount.core :refer [defstate args]]))
+
+(def conf (load-config :resource "conf.edn"
+                       :merge [{:wd (:working-directory (args))}]))
 
 (defn root?
   [dir]
@@ -39,14 +43,13 @@
     (let [file-name (first args)]
       (fs/copy (io/resource file-name) (io/file (:wd conf) file-name)))
     (let [[dir pattern] args]
-      (for [file (fs/find-files (io/resource dir) pattern)]
+      (doseq [file (fs/find-files (io/resource dir) pattern)]
         (let [file-name (.getName file)]
           (fs/copy file (io/file (:wd conf) dir file-name)))))))
 
-(defn init
-  []
-  (create-directory)
-  (do
-    (copy-resource "templates" #".*\.html$")
-    (copy-resource "snippets" #".*\.html$")
-    (copy-resource "conf.edn")))
+
+(defstate init :start (do
+                        (create-directory)
+                        (copy-resource "templates" #".*\.html$")
+                        (copy-resource "snippets" #".*\.html$")
+                        (copy-resource "conf.edn")))
