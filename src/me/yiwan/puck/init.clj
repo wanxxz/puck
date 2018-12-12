@@ -47,7 +47,6 @@
         (let [file-name (.getName file)]
           (fs/copy file (io/file (:wd conf) dir file-name)))))))
 
-
 (defstate init :start (do
                         (create-directory)
                         (copy-resource "templates" #".*\.html$")

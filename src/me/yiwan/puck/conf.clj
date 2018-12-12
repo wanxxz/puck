@@ -6,4 +6,4 @@
 (defstate conf :start (let [wd (:working-directory (args))]
                         (load-config :resource "conf.edn"
                                      :file (io/file wd "conf.edn")
-                                     :merge [{:wd wd}]))) 
+                                     :merge [{:wd wd}])))
