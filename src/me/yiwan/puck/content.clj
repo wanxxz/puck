@@ -1,4 +1,4 @@
-(ns me.yiwan.puck.post
+(ns me.yiwan.puck.content
   (:require [clojure.java.io :refer [file]]
             [hiccup.core :as hiccup]
             [instaparse.core :as insta]

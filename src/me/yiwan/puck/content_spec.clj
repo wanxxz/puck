@@ -1,10 +1,10 @@
-(ns me.yiwan.puck.post-spec
+(ns me.yiwan.puck.content-spec
   (:require [clojure.pprint :refer [pprint]]
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [clojure.spec.test.alpha :as test]
             [clojure.string :refer [blank? join]]
-            me.yiwan.puck.post))
+            me.yiwan.puck.content))
 
 ;; check post file
 (s/def ::not-blank #(not (blank? %)))
