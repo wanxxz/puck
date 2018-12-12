@@ -1,37 +1,68 @@
 (ns me.yiwan.puck.main
   (:gen-class)
-  (:require [clojure.core.async :refer [<!! >!! chan]]
+  (:require [clojure.string :as string]
+            [clojure.core.async :refer [<!! >!! chan]]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [mount.core :as mount]
-            [me.yiwan.puck.conf :refer [conf]]))
+            [me.yiwan.puck.conf :refer [conf]]
+            [me.yiwan.puck.init :refer [init]]))
 
-(defn parse-args
+(defn usage [options-summary]
+  (->> ["Puck, a simple markdown bloging application"
+        ""
+        "Usage: puck [options] action"
+        ""
+        "Options:"
+        options-summary
+        ""
+        "Actions:"
+        "  start  Start application"
+        "  init   Initialize"
+        ""
+        (string/join \newline)]))
+
+(def cli-options [["-w" "--working-directory path" "Wroking directory"
+                   :default (.getAbsolutePath fs/*cwd*)
+                   :parse-fn #(.getAbsolutePath (io/file %))
+                   :validate [#(fs/directory? %) "not a directory"]]
+                  ["-h" "--help"]])
+
+(defn error-msg [errors]
+  (str "The following errors occurred while parsing your command:\n\n"
+       (string/join \newline errors)))
+
+(defn validate-args
   [args]
-  (let [opts [["-w" "--working-directory path" "Wroking directory"
-               :default (.getAbsolutePath fs/*cwd*)
-               :parse-fn #(.getAbsolutePath (io/file %))
-               :validate [#(fs/directory? %) "not a directory"]]
-              ["-i" "--init" "Initialize"]
-              ["-h" "--help"]]]
-    (parse-opts args opts)))
-
-(defn -main
-  [& args]
-  (let [exit (chan 1)
-        {:keys [options errors]} (parse-args args)]
+  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (cond
+      (:help options)
+      {:exit-message (usage summary) :ok? true}
       errors
-      (do (println errors) (>!! exit 0))
-      (:init options)
-      (->
-       (mount/except [#'me.yiwan.puck.watch/watch])
-       (mount/with-args options)
-       mount/start)
-      options
-      (->
-       (mount/with-args options)
-       mount/start))
-      ;; (println (format "server start %s:%d" (conf :host) (conf :port))))
-    (<!! exit)))
+      {:exit-message (error-msg errors)}
+      (and (= 1 (count arguments))
+           (#{"start" "init"} (first arguments)))
+      {:action (first arguments) :options options}
+      :else
+      {:exit-message (usage summary)})))
+
+(defn exit [status msg]
+  (println msg)
+  (System/exit status))
+
+(defn -main [& args]
+  (let [{:keys [action options exit-message ok?]} (validate-args args)]
+    (if exit-message
+      (exit (if ok? 0 1) exit-message)
+      (case action
+        "start"
+        (->
+         (mount/except [#'me.yiwan.puck.init/init])
+         (mount/with-args options)
+         mount/start)
+        "init"
+        (->
+         (mount/only [#'me.yiwan.puck.init/init])
+         (mount/with-args options)
+         mount/start)))))
