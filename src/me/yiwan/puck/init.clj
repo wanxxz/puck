@@ -37,15 +37,20 @@
       (doseq [dir dirs]
         (.mkdirs (io/file (:wd conf) (-> conf :dir :root) dir))))))
 
+(defn safe-copy
+  [from to]
+  (if (-> to fs/exists? not)
+    (fs/copy from to)))
+
 (defn copy-resource
   [& args]
   (if (= 1 (count args))
     (let [file-name (first args)]
-      (fs/copy (io/resource file-name) (io/file (:wd conf) file-name)))
+      (safe-copy (io/resource file-name) (io/file (:wd conf) file-name)))
     (let [[dir pattern] args]
       (doseq [file (fs/find-files (io/resource dir) pattern)]
         (let [file-name (.getName file)]
-          (fs/copy file (io/file (:wd conf) dir file-name)))))))
+          (safe-copy file (io/file (:wd conf) dir file-name)))))))
 
 (defstate init :start (do
                         (create-directory)
