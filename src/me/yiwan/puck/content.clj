@@ -67,7 +67,7 @@
 
 (defn seek-template-name
   [meta]
-  ;; ignore duplicate meta, use last one
+  ;; ignore duplicate, take last one
   (let [template-meta-name (-> conf :meta :template)
         meta (map #(hash-map :key (-> % second last) :value (-> % last last)) meta)
         res (filter #(= (:key %) template-meta-name) meta)]
