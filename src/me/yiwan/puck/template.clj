@@ -17,7 +17,7 @@
     (symbol (str "template-" ~name))
     (enlive-html/template ~file
                           [content#]
-                          [:div.content-placeholder] (enlive-html/html-content content#))))
+                          [:div.content] (enlive-html/html-content content#))))
 
 (defn find-template-files
   []
