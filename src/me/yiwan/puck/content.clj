@@ -1,8 +1,6 @@
 (ns me.yiwan.puck.content
-  (:require [clojure.java.io :refer [file]]
-            [hiccup.core :as hiccup]
-            [instaparse.core :as insta]
-            [me.yiwan.puck.conf :refer [conf]]))
+  (:require [hiccup.core :as hiccup]
+            [instaparse.core :as insta]))
 
 (def parser
   (insta/parser
@@ -65,22 +63,33 @@
               :Rule (hiccup/html [:hr])
               :Paragraph (hiccup/html [:p (apply str (map generate-inlines (drop 1 b)))])))))
 
-(defn seek-template-name
+(defn meta-seq
+  "take a seq, return a lazy-seq of maps, contains meta key and value"
   [meta]
-  ;; ignore duplicate, take last one
-  (let [template-meta-name (-> conf :meta :template)
-        meta (map #(hash-map :key (-> % second last) :value (-> % last last)) meta)
-        res (filter #(= (:key %) template-meta-name) meta)]
+  (map #(hash-map (-> % second last keyword) (-> % last last)) meta))
+
+(defn meta-map
+  "take a lazy-seq, return a @map, contains meta key and value, use last one for duplicate keys"
+  [s]
+  (let [r (atom {})]
+    (doseq [m s] (let [k (-> m keys last) v (-> m vals last)] (swap! r assoc k v)))
+    r))
+
+(defn resolve-template-name
+  "ignore duplicate, take last one"
+  [meta]
+  (let [meta (meta-seq meta)
+        res (filter #(= (-> % keys first) :template) meta)]
     (if (empty? res)
-      (println (format "meta not found: %s" template-meta-name))
-      (:value (last res)))))
+      (println (format "meta not found: %s" :template))
+      (-> (last res) vals first))))
 
 (defn resolve-template-function
-  [value]
-  (let [s (symbol (str (-> conf :meta :template) "-" value))
+  [n]
+  (let [s (symbol (str "template-" n))
         t (ns-resolve 'me.yiwan.puck.template s)]
     (if (nil? t)
-      (println (format "template not found: %s" value))
+      (println (format "template not found: %s" n))
       t)))
 
 (defn parse-meta
@@ -100,8 +109,9 @@
 (defn generate-html
   [txt]
   (let [meta (parse-meta txt)]
-    (if (not (nil? meta))
+    (if (some? meta)
       (let [content (-> txt parse-content generate-blocks)
-            template-function (some-> meta seek-template-name resolve-template-function)]
+            template-function (some-> meta resolve-template-name resolve-template-function)]
         (if (some? template-function)
-          (reduce str (template-function content)))))))
+          (let [meta @(-> meta meta-seq meta-map)]
+            (reduce str (template-function meta content))))))))
