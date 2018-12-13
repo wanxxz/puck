@@ -6,7 +6,4 @@
        :template "templates"
        :snippet "snippets"
        :asset "assets"
-       :page "pages"}
- :meta {
-        :template "template"
-        :title "title"}}
+       :page "pages"}}
