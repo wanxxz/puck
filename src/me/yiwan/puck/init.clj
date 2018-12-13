@@ -1,8 +1,8 @@
 (ns me.yiwan.puck.init
   (:require [clojure.java.io :as io]
-            [me.raynes.fs :as fs]
             [cprop.core :refer [load-config]]
-            [mount.core :refer [defstate args]]))
+            [me.raynes.fs :as fs]
+            [mount.core :refer [args defstate]]))
 
 (def conf (load-config :resource "conf.edn"
                        :merge [{:wd (:working-directory (args))}]))

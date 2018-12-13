@@ -1,14 +1,14 @@
 (ns me.yiwan.puck.generate
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
-            [mount.core :refer [defstate]]
             [me.yiwan.puck.conf :refer [conf]]
-            [me.yiwan.puck.content :refer [generate-html]]))
+            [me.yiwan.puck.content :refer [generate-html]]
+            [mount.core :refer [defstate]]))
 
 (defn find-files
   [dir pattern]
   (let [path (.getPath (io/file (:wd conf) (-> conf :dir dir)))]
-       (fs/find-files path pattern)))
+    (fs/find-files path pattern)))
 
 (defn find-output-file
   [dir name ext]
@@ -23,7 +23,7 @@
 
 (defn generate-content
   [dir]
-  (doseq [input-file (find-files dir #".*\.md$")] 
+  (doseq [input-file (find-files dir #".*\.md$")]
     (let [input-file-name (fs/base-name input-file true)
           output-file (find-output-file dir input-file-name ".html")]
       (spit output-file (generate-html (slurp input-file))))))

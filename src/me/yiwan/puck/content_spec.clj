@@ -3,8 +3,7 @@
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [clojure.spec.test.alpha :as test]
-            [clojure.string :refer [blank? join]]
-            me.yiwan.puck.content))
+            [clojure.string :refer [blank? join]]))
 
 ;; check post file
 (s/def ::not-blank #(not (blank? %)))

@@ -2,9 +2,9 @@
   (:require [clojure.java.io :as io]
             [hawk.core :as hawk]
             [me.raynes.fs :as fs]
-            [mount.core :refer [defstate]]
             [me.yiwan.puck.conf :refer [conf]]
-            [me.yiwan.puck.content :refer [generate-html]]))
+            [me.yiwan.puck.content :refer [generate-html]]
+            [mount.core :refer [defstate]]))
 
 (defn create-watcher
   [dir]

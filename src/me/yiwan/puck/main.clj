@@ -1,13 +1,11 @@
 (ns me.yiwan.puck.main
   (:gen-class)
-  (:require [clojure.string :as string]
-            [clojure.core.async :refer [<!! >!! chan]]
+  (:require [clojure.java.io :as io]
+            [clojure.string :as string]
             [clojure.tools.cli :refer [parse-opts]]
-            [clojure.java.io :as io]
             [me.raynes.fs :as fs]
-            [mount.core :as mount]
-            [me.yiwan.puck.conf :refer [conf]]
-            [me.yiwan.puck.init :refer [init]]))
+            [me.yiwan.puck.init :refer [init]]
+            [mount.core :as mount]))
 
 (defn usage [options-summary]
   (->> ["Puck, a simple markdown bloging application"
