@@ -56,4 +56,5 @@
                         (create-directory)
                         (copy-resource "templates" #".*\.html$")
                         (copy-resource "snippets" #".*\.html$")
+                        (copy-resource "pages" #".*\.md$")
                         (copy-resource "conf.edn")))
