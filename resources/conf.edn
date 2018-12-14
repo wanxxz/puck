@@ -1,9 +1,10 @@
 {:host "0.0.0.0"
  :port 8080
- :dir {:root "www" ;; http server root
-       :post "posts" ;; where `.md` file stays, processed `.html` file will be under www/post
-       :file "files"
-       :template "templates"
-       :snippet "snippets"
-       :asset "assets"
-       :page "pages"}}
+ :dir {:root "www"           ;; http server root
+       :asset "assets"       ;; assets/all.css <= symbol link = www/assets/all.css
+       :file "files"         ;; files/bar.zip <= symbol link = www/files/bar.zip
+       :template "templates" ;; template: post <=> templates/post.html
+       :snippet "snippets"   ;; used by templates, <!-- snippet-head --> <=> snippets/head.html
+       :post "posts"         ;; markdown posts, posts/2018-12-01-foo.md => www/posts/2018-12-01-foo.html
+       :page "pages"}        ;; markdown pages, pages/foo.md => www/foo.html
+ :site {:index "home"}}      ;; pages/home.md => www/index.html
