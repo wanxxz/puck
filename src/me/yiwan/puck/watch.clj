@@ -27,4 +27,4 @@
 
   :stop  (do
            (hawk/stop! (:post watch))
-           (hawk/stop! (:post watch))))
+           (hawk/stop! (:page watch))))
