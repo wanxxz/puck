@@ -3,7 +3,8 @@
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
             [mount.core :refer [defstate]]
-            [net.cgrand.enlive-html :as enlive]))
+            [net.cgrand.enlive-html :as enlive]
+            net.cgrand.reload))
 
 ;; each time a resource or file used by a template/snippet is updated the namespace is reloaded 
 (net.cgrand.reload/auto-reload *ns*)
