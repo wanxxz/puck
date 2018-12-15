@@ -5,6 +5,7 @@
             [clojure.tools.cli :refer [parse-opts]]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.init :refer [init]]
+            [me.yiwan.puck.check :refer [check]]
             [mount.core :as mount]))
 
 (defn usage [options-summary]
@@ -18,6 +19,7 @@
         "Actions:"
         "  start  Start application"
         "  init   Initialize"
+        "  check  Check files, directories"
         ""
         (string/join \newline)]))
 
@@ -40,7 +42,7 @@
       errors
       {:exit-message (error-msg errors)}
       (and (= 1 (count arguments))
-           (#{"start" "init"} (first arguments)))
+           (#{"start" "init" "check"} (first arguments)))
       {:action (first arguments) :options options}
       :else
       {:exit-message (usage summary)})))
@@ -62,5 +64,11 @@
         "init"
         (->
          (mount/only [#'me.yiwan.puck.init/init])
+         (mount/with-args options)
+         mount/start)
+        "check"
+        (->
+         (mount/only [#'me.yiwan.puck.conf/conf
+                      #'me.yiwan.puck.check/check])
          (mount/with-args options)
          mount/start)))))
