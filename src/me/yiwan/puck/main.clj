@@ -1,10 +1,11 @@
 (ns me.yiwan.puck.main
   (:gen-class)
-  (:require [clojure.core.async :refer [<!! >!! chan]]
+  (:require [clojure.core.async :refer [<!! timeout]]
             [clojure.java.io :as io]
             [clojure.string :as string]
             [clojure.tools.cli :refer [parse-opts]]
             [me.raynes.fs :as fs]
+            [me.yiwan.puck.conf :refer [conf]]
             [me.yiwan.puck.check :refer [check]]
             [me.yiwan.puck.init :refer [init]]
             [mount.core :as mount]))
@@ -21,8 +22,8 @@
         "  start  Start application"
         "  init   Initialize"
         "  check  Check files, directories"
-        ""
-        (string/join \newline)]))
+        ""]
+       (string/join \newline)))
 
 (def cli-options [["-w" "--working-directory path" "Wroking directory"
                    :default (.getAbsolutePath fs/*cwd*)
@@ -39,9 +40,11 @@
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (cond
       (:help options)
-      {:exit-message (usage summary) :ok? true}
+      {:exit-message (usage summary)}
       errors
       {:exit-message (error-msg errors)}
+      (empty? arguments)
+      {:exit-message "missing a action: (start init check)"}
       (and (= 1 (count arguments))
            (#{"start" "init" "check"} (first arguments)))
       {:action (first arguments) :options options}
@@ -49,10 +52,9 @@
       {:exit-message (usage summary)})))
 
 (defn -main [& args]
-  (let [{:keys [action options exit-message ok?]} (validate-args args)
-        exit (chan 1)]
+  (let [{:keys [action options exit-message]} (validate-args args)]
     (if exit-message
-      (>!! exit exit-message)
+      (println exit-message)
       (try
         (case action
           "start"
@@ -61,16 +63,18 @@
               (mount/with-args options)
               mount/start)
           "init"
-          (do (-> (mount/only [#'me.yiwan.puck.init/init])
-                  (mount/with-args options)
-                  mount/start)
-              (>!! exit "done"))
+          (-> (mount/only [#'me.yiwan.puck.conf/conf
+                           #'me.yiwan.puck.init/init])
+              (mount/with-args options)
+              mount/start)
           "check"
-          (do (-> (mount/only [#'me.yiwan.puck.check/check])
-                  (mount/with-args options)
-                  mount/start)
-              (>!! exit "done")))
+          (-> (mount/only [#'me.yiwan.puck.conf/conf
+                           #'me.yiwan.puck.check/check])
+              (mount/with-args options)
+              mount/start))
         (catch Exception e
-          (>!! exit (format "naaaah! run check command, it may help\n%s ..." e)))))
-    (<!! exit)))
-
+          (println (format "naaaah! run check command, it may help\n%s ..." e))))))
+  (doto
+   (Thread. (fn [] (while true (<!! (timeout 1000)))))
+    (.setDaemon true)
+    (.start)))
