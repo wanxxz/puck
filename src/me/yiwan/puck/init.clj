@@ -52,9 +52,8 @@
         (let [file-name (.getName file)]
           (safe-copy file (io/file (:wd conf) dir file-name)))))))
 
-(defstate init :start (do
-                        (create-directory)
-                        (copy-resource "templates" #".*\.html$")
-                        (copy-resource "snippets" #".*\.html$")
-                        (copy-resource "pages" #".*\.md$")
-                        (copy-resource "conf.edn")))
+(defstate init :start (do (create-directory)
+                          (copy-resource "templates" #".*\.html$")
+                          (copy-resource "snippets" #".*\.html$")
+                          (copy-resource "pages" #".*\.md$")
+                          (copy-resource "conf.edn")))
