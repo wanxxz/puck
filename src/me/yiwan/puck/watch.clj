@@ -7,23 +7,23 @@
             [mount.core :refer [defstate]]))
 
 (defn create-watcher
-  [dir]
+  [dir ext]
   (hawk/watch!
-   [{:paths [(.getPath (io/file (:wd conf) (-> conf :dir dir)))]
-     :filter hawk/file?
+   [{:paths [(.getPath (io/file (:wd conf) dir))]
+     :filter (fn [_ e] (and (hawk/file? _ e) (= ext (fs/extension (:file e)))))
      :handler (fn [_ e]
                 (println (format "%s" (:file e)))
                 (let [f (io/file
                          (:wd conf)
                          (-> conf :dir :root)
-                         (-> conf :dir dir)
+                         dir
                          (str (fs/base-name (:file e) true) ".html"))]
                   (if (not (fs/file? f)) (.createNewFile f))
                   (spit f (generate-html (slurp (:file e))))))}]))
 
 (defstate watch
-  :start {:post (create-watcher :post)
-          :page (create-watcher :page)}
+  :start {:post (create-watcher (-> conf :dir :post) ".md")
+          :page (create-watcher (-> conf :dir :page) ".md")}
 
   :stop  (do
            (hawk/stop! (:post watch))
