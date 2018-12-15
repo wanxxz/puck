@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
+            [me.yiwan.puck.snippet :refer [snippet]]
             [mount.core :refer [defstate]]
             [net.cgrand.enlive-html :as enlive]
             net.cgrand.reload))

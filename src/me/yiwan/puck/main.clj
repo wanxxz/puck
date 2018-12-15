@@ -1,11 +1,12 @@
 (ns me.yiwan.puck.main
   (:gen-class)
-  (:require [clojure.java.io :as io]
+  (:require [clojure.core.async :refer [<!! >!! chan]]
+            [clojure.java.io :as io]
             [clojure.string :as string]
             [clojure.tools.cli :refer [parse-opts]]
             [me.raynes.fs :as fs]
-            [me.yiwan.puck.init :refer [init]]
             [me.yiwan.puck.check :refer [check]]
+            [me.yiwan.puck.init :refer [init]]
             [mount.core :as mount]))
 
 (defn usage [options-summary]
@@ -47,28 +48,29 @@
       :else
       {:exit-message (usage summary)})))
 
-(defn exit [status msg]
-  (println msg)
-  (System/exit status))
-
 (defn -main [& args]
-  (let [{:keys [action options exit-message ok?]} (validate-args args)]
+  (let [{:keys [action options exit-message ok?]} (validate-args args)
+        exit (chan 1)]
     (if exit-message
-      (exit (if ok? 0 1) exit-message)
-      (case action
-        "start"
-        (->
-         (mount/except [#'me.yiwan.puck.init/init])
-         (mount/with-args options)
-         mount/start)
-        "init"
-        (->
-         (mount/only [#'me.yiwan.puck.init/init])
-         (mount/with-args options)
-         mount/start)
-        "check"
-        (->
-         (mount/only [#'me.yiwan.puck.conf/conf
-                      #'me.yiwan.puck.check/check])
-         (mount/with-args options)
-         mount/start)))))
+      (>!! exit exit-message)
+      (try
+        (case action
+          "start"
+          (-> (mount/except [#'me.yiwan.puck.init/init
+                             #'me.yiwan.puck.check/check])
+              (mount/with-args options)
+              mount/start)
+          "init"
+          (do (-> (mount/only [#'me.yiwan.puck.init/init])
+                  (mount/with-args options)
+                  mount/start)
+              (>!! exit "done"))
+          "check"
+          (do (-> (mount/only [#'me.yiwan.puck.check/check])
+                  (mount/with-args options)
+                  mount/start)
+              (>!! exit "done")))
+        (catch Exception e
+          (>!! exit (format "naaaah! run check command, it may help\n%s ..." e)))))
+    (<!! exit)))
+

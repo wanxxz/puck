@@ -2,10 +2,8 @@
   (:require [clojure.java.io :as io]
             [cprop.core :refer [load-config]]
             [me.raynes.fs :as fs]
+            [me.yiwan.puck.conf :refer [conf]]
             [mount.core :refer [args defstate]]))
-
-(def conf (load-config :resource "conf.edn"
-                       :merge [{:wd (:working-directory (args))}]))
 
 (defn root?
   [dir]
@@ -57,4 +55,5 @@
                           (copy-resource "templates" #".*\.html$")
                           (copy-resource "snippets" #".*\.html$")
                           (copy-resource "pages" #".*\.md$")
+                          (copy-resource "posts" #".*\.md$")
                           (copy-resource "conf.edn")))

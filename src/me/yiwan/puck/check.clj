@@ -1,16 +1,16 @@
 (ns me.yiwan.puck.check
   (:require [clojure.java.io :as io]
+            [cprop.core :refer [load-config]]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
-            [mount.core :refer [defstate]]))
+            [mount.core :refer [args defstate]]))
 
 (defn check-directories
   []
   (doseq [d (-> conf :dir vals)]
     (let [f (io/file (:wd conf) d)]
       (if (not (fs/directory? f))
-        (println (format "missing directory: %s" (.getPath f)))
-        true))))
+        (println (format "missing directory: %s" (.getPath f)))))))
 
 (defn check-files
   [dir pat msg & [n]]

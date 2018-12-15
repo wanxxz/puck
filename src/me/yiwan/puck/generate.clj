@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
+            [me.yiwan.puck.template :refer [template]]
             [me.yiwan.puck.content :refer [generate-html]]
             [mount.core :refer [defstate]]))
 

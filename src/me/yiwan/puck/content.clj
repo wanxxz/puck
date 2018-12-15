@@ -1,5 +1,6 @@
 (ns me.yiwan.puck.content
   (:require [hiccup.core :as hiccup]
+            [me.yiwan.puck.template :refer [template]]
             [instaparse.core :as insta]))
 
 (def parser
