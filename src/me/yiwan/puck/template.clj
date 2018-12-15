@@ -23,22 +23,22 @@
       (println (format "snippet not found: %s" n))
       f)))
 
-(defmacro create-template-function
+(defn create-template-function
   [name file]
-  `(intern
-    'me.yiwan.puck.template
-    (symbol (str "template-" ~name))
-    (enlive/template ~file
-                     [meta# content#]
-                     [#{:head :body} enlive/comment-node]
-                     (fn [node#] (some-> (:data node#)
-                                         resolve-snippet-name
-                                         resolve-snippet-function
-                                         (apply meta#)
-                                         enlive/substitute
-                                         (apply node#)))
-                     [enlive/any-node] (enlive/replace-vars meta#)
-                     [:div.content] (enlive/html-content content#))))
+  (intern
+   'me.yiwan.puck.template
+   (symbol (str "template-" name))
+   (enlive/template file
+                    [meta content]
+                    [#{:head :body} enlive/comment-node]
+                    (fn [node] (some-> (:data node)
+                                       resolve-snippet-name
+                                       resolve-snippet-function
+                                       (apply meta)
+                                       enlive/substitute
+                                       (apply node)))
+                    [enlive/any-node] (enlive/replace-vars meta)
+                    [:div.content] (enlive/html-content content))))
 
 (defn find-template-files
   []

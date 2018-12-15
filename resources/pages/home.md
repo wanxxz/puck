@@ -1,6 +1,6 @@
 ---
 title: puck
-template: page 
+template: page
 ---
 
 ლ(ಠ_ಠ ლ)

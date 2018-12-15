@@ -8,15 +8,15 @@
 
 (net.cgrand.reload/auto-reload *ns*)
 
-(defmacro create-snippet-function
+(defn create-snippet-function
   [name file]
-  `(intern
-    'me.yiwan.puck.snippet
-    (symbol (str "snippet-" ~name))
-    (enlive/snippet ~file
-                    [#{:head :body} :*]
-                    [meta# & args#]
-                    [enlive/any-node] (enlive/replace-vars meta#))))
+  (intern
+   'me.yiwan.puck.snippet
+   (symbol (str "snippet-" name))
+   (enlive/snippet file
+                   [#{:head :body} :*]
+                   [meta & args]
+                   [enlive/any-node] (enlive/replace-vars meta))))
 
 (defn find-snippet-files
   []
