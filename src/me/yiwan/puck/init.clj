@@ -39,8 +39,9 @@
 
 (defn safe-copy
   [from to]
-  (if (-> to fs/exists? not)
-    (fs/copy from to)))
+  (if (fs/exists? to)
+    (fs/copy to (str to ".old")))
+  (fs/copy from to))
 
 (defn copy-resource
   [& args]
