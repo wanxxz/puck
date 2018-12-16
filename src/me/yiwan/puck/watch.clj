@@ -3,6 +3,7 @@
             [hawk.core :as hawk]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
+            me.yiwan.puck.generate
             [me.yiwan.puck.content :refer [generate-html]]
             [mount.core :refer [defstate]]))
 
