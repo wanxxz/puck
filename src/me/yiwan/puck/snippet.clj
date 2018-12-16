@@ -23,8 +23,7 @@
   (let [file (io/file (:wd conf) (-> conf :dir :snippet))
         path (.getPath file)
         pat #".*\.html$"]
-    (map
-     (fn [file] [(fs/base-name file true) file])
-     (fs/find-files path pat))))
+    (fs/find-files path pat)))
 
-(defstate snippet :start (doseq [[n f] (find-snippet-files)] (create-snippet-function n f)))
+(defstate snippet :start (doseq [f (find-snippet-files)]
+                           (create-snippet-function (fs/base-name f true) f)))

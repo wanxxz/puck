@@ -46,8 +46,7 @@
   (let [file (io/file (:wd conf) (-> conf :dir :template))
         path (.getPath file)
         pat #".*\.html$"]
-    (map
-     (fn [file] [(fs/base-name file true) file])
-     (fs/find-files path pat))))
+    (fs/find-files path pat)))
 
-(defstate template :start (doseq [[n f] (find-template-files)] (create-template-function n f)))
+(defstate template :start (doseq [f (find-template-files)]
+                            (create-template-function (fs/base-name f true) f)))

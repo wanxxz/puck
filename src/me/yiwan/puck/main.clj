@@ -8,6 +8,7 @@
             [me.yiwan.puck.conf :refer [conf]]
             [me.yiwan.puck.check :refer [check]]
             [me.yiwan.puck.init :refer [init]]
+            me.yiwan.puck.watch
             [mount.core :as mount]))
 
 (defn usage [options-summary]
@@ -73,8 +74,4 @@
               (mount/with-args options)
               mount/start))
         (catch Exception e
-          (println (format "naaaah! run check command, it may help\n%s ..." e))))))
-  (doto
-   (Thread. (fn [] (while true (<!! (timeout 1000)))))
-    (.setDaemon true)
-    (.start)))
+          (println (format "naaaah! run check command, it may help\n%s ..." e)))))))
