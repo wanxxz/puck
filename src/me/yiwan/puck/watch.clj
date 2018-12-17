@@ -4,7 +4,7 @@
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
             me.yiwan.puck.generate
-            [me.yiwan.puck.content :refer [generate-html]]
+            [me.yiwan.puck.markdown :refer [generate-html]]
             [mount.core :refer [defstate]]))
 
 (defn create-watcher

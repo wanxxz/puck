@@ -1,4 +1,4 @@
-(ns me.yiwan.puck.content
+(ns me.yiwan.puck.markdown
   (:require [hiccup.core :as hiccup]
             me.yiwan.puck.template
             [instaparse.core :as insta]))
