@@ -1,14 +1,13 @@
 (ns me.yiwan.puck.main
   (:gen-class)
-  (:require [clojure.core.async :refer [<!! timeout]]
-            [clojure.java.io :as io]
+  (:require [clojure.java.io :as io]
             [clojure.string :as string]
             [clojure.tools.cli :refer [parse-opts]]
             [me.raynes.fs :as fs]
-            [me.yiwan.puck.conf :refer [conf]]
-            [me.yiwan.puck.check :refer [check]]
-            [me.yiwan.puck.init :refer [init]]
-            me.yiwan.puck.watch
+            me.yiwan.puck.check
+            me.yiwan.puck.conf
+            me.yiwan.puck.generate
+            me.yiwan.puck.init
             [mount.core :as mount]))
 
 (defn usage [options-summary]
@@ -20,9 +19,10 @@
         options-summary
         ""
         "Actions:"
-        "  start  Start application"
-        "  init   Initialize"
-        "  check  Check files, directories"
+        "  start     Start application"
+        "  init      Initialize"
+        "  check     Check files, directories"
+        "  generate  generate html files, posts/foo.html pages/bar.html"
         ""]
        (string/join \newline)))
 
@@ -47,7 +47,7 @@
       (empty? arguments)
       {:exit-message "missing a action: (start init check)"}
       (and (= 1 (count arguments))
-           (#{"start" "init" "check"} (first arguments)))
+           (#{"start" "init" "check" "generate"} (first arguments)))
       {:action (first arguments) :options options}
       :else
       {:exit-message (usage summary)})))
@@ -71,6 +71,11 @@
           "check"
           (-> (mount/only [#'me.yiwan.puck.conf/conf
                            #'me.yiwan.puck.check/check])
+              (mount/with-args options)
+              mount/start)
+          "generate"
+          (-> (mount/only [#'me.yiwan.puck.conf/conf
+                           #'me.yiwan.puck.generate/generate])
               (mount/with-args options)
               mount/start))
         (catch Exception e
