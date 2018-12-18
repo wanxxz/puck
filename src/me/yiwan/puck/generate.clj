@@ -2,7 +2,7 @@
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
-            [me.yiwan.puck.markdown :refer [generate-html]]
+            [me.yiwan.puck.html :refer [generate-html]]
             [mount.core :refer [defstate]]))
 
 (defn find-files
