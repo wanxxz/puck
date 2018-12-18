@@ -32,13 +32,13 @@
    (enlive/template file
                     [meta content]
                     [#{:head :body} enlive/comment-node]
-                    (fn [node] (some-> (:data node)
-                                       resolve-snippet-name
-                                       resolve-snippet-function
-                                       (apply meta)
-                                       enlive/substitute
-                                       (apply node)))
-                    [enlive/any-node] (enlive/replace-vars meta)
+                    (fn [node]
+                      (some-> (:data node)
+                              resolve-snippet-name
+                              resolve-snippet-function
+                              (apply (list :meta meta)) 
+                              enlive/substitute
+                              (apply node)))
                     [:div.content] (enlive/html-content content))))
 
 (defn find-template-files
