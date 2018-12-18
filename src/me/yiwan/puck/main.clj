@@ -11,7 +11,7 @@
             [mount.core :as mount]))
 
 (defn usage [options-summary]
-  (->> ["Puck, a simple markdown bloging application"
+  (->> ["Puck, a simple markdown bloging tool"
         ""
         "Usage: puck [options] action"
         ""
@@ -22,7 +22,7 @@
         "  start     Start application"
         "  init      Initialize"
         "  check     Check files, directories"
-        "  generate  generate html files, posts/foo.html pages/bar.html"
+        "  generate  Generate post, pages"
         ""]
        (string/join \newline)))
 
