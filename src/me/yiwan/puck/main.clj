@@ -74,4 +74,4 @@
               (mount/with-args options)
               mount/start))
         (catch Exception e
-          (println (format "naaaah! run check command, it may help\n%s ..." e)))))))
+          (throw e))))))
