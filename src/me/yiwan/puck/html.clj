@@ -2,7 +2,7 @@
   (:require [me.yiwan.puck.markdown
              :refer
              [generate-blocks meta-map meta-seq parse-content parse-meta]]
-            [me.yiwan.puck.template :refer :all]))
+            me.yiwan.puck.template))
 
 (defn resolve-template-name
   "ignore duplicate, take last one"
