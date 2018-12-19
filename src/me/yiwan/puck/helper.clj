@@ -30,7 +30,7 @@
 
 (s/fdef list-post
   :args (s/or :ks nil?
-              :ks #(subset? % #{:title :date :content}))) 
+              :ks #(subset? % #{:title :date :content})))
 
 (comment
   (test/instrument `list-post))
