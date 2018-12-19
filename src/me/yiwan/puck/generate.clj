@@ -27,7 +27,3 @@
     (let [input-file-name (fs/base-name input-file true)
           output-file (find-output-file dir input-file-name ".html")]
       (spit output-file (generate-html (slurp input-file))))))
-
-(defstate generate :start (do
-                            (generate-content :post)
-                            (generate-content :page)))

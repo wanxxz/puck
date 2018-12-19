@@ -3,7 +3,7 @@
             [hawk.core :as hawk]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
-            me.yiwan.puck.generate
+            [me.yiwan.puck.generate :refer [generate-content]]
             [me.yiwan.puck.html :refer [generate-html]]
             [mount.core :refer [defstate]]))
 
@@ -23,8 +23,8 @@
                   (spit f (generate-html (slurp (:file e))))))}]))
 
 (defstate watch
-  :start {:post (create-watcher (-> conf :dir :post) ".md")
-          :page (create-watcher (-> conf :dir :page) ".md")}
+  :start {:post (do (generate-content :post) (create-watcher (-> conf :dir :post) ".md"))
+          :page (do (generate-content :post) (create-watcher (-> conf :dir :page) ".md"))}
 
   :stop  (do
            (hawk/stop! (:post watch))
