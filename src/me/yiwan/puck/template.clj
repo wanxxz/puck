@@ -2,12 +2,11 @@
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
-            [me.yiwan.puck.snippet :refer [snippet]]
+            me.yiwan.puck.snippet
             [mount.core :refer [defstate]]
             [net.cgrand.enlive-html :as enlive]
             net.cgrand.reload))
 
-;; each time a resource or file used by a template/snippet is updated the namespace is reloaded 
 (net.cgrand.reload/auto-reload *ns*)
 
 (defn resolve-snippet-name
@@ -36,7 +35,7 @@
                       (some-> (:data node)
                               resolve-snippet-name
                               resolve-snippet-function
-                              (apply (list :meta meta)) 
+                              (apply (list :meta meta))
                               enlive/substitute
                               (apply node)))
                     [:div.content] (enlive/html-content content))))
