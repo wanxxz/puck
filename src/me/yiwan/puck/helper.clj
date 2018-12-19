@@ -18,14 +18,15 @@
                (fs/find-files (.getPath (io/file (:wd conf)
                                                  (-> conf :dir :post)))
                               #".*\.md$"))]
-    (cond
-      (or (empty? s) (= s #{:title :date})) (map #(hash-map :title (:title %) :date (:date %)) m)
-      (= s #{:title :date :content}) m
-      (= s #{:title :content}) (map #(hash-map :title (:title %) :content (:content %)) m)
-      (= s #{:date :content}) (map #(hash-map :date (:date %) :content (:content %)) m)
-      (= s #{:title}) (map #(hash-map :title (:title %)) m)
-      (= s #{:date}) (map #(hash-map :date (:date %)) m)
-      (= s #{:content}) (map #(hash-map :content (:content %)) m))))
+    (case s
+      #{:title :date :content} m
+      #{:title :content} (map #(hash-map :title (:title %) :content (:content %)) m)
+      #{:title :date} (map #(hash-map :title (:title %) :date (:date %)) m)
+      #{:date :content} (map #(hash-map :date (:date %) :content (:content %)) m)
+      #{:title} (map #(hash-map :title (:title %)) m)
+      #{:date} (map #(hash-map :date (:date %)) m)
+      #{:content} (map #(hash-map :content (:content %)) m)
+      :else (map #(hash-map :title (:title %) :date (:date %))))))
 
 (s/fdef list-post
   :args (s/or :ks nil?
