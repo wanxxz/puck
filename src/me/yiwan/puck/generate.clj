@@ -2,8 +2,7 @@
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
-            [me.yiwan.puck.html :refer [generate-html]]
-            [mount.core :refer [defstate]]))
+            [me.yiwan.puck.html :refer [generate-html]]))
 
 (defn find-files
   [dir pattern]
