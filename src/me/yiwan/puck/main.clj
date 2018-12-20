@@ -10,6 +10,9 @@
             me.yiwan.puck.init
             [mount.core :as mount]))
 
+;; conf used at compile time
+(mount/start #'me.yiwan.puck.conf/conf)
+
 (defn usage [options-summary]
   (->> ["Puck, a simple markdown bloging tool"
         ""

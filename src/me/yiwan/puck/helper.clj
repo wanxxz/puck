@@ -26,7 +26,7 @@
       #{:title} (map #(hash-map :title (:title %)) m)
       #{:date} (map #(hash-map :date (:date %)) m)
       #{:content} (map #(hash-map :content (:content %)) m)
-      :else (map #(hash-map :title (:title %) :date (:date %))))))
+      (map #(hash-map :title (:title %) :date (:date %)) m))))
 
 (s/fdef list-post
   :args (s/or :ks nil?
