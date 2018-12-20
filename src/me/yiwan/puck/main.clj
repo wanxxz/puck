@@ -6,8 +6,8 @@
             [me.raynes.fs :as fs]
             me.yiwan.puck.check
             me.yiwan.puck.conf
-            [me.yiwan.puck.generate :refer [generate-content]]
             me.yiwan.puck.init
+            me.yiwan.puck.generate
             [mount.core :as mount]))
 
 ;; conf used at compile time
@@ -77,10 +77,9 @@
               (mount/with-args options)
               mount/start)
           "generate"
-          (do (-> (mount/only [#'me.yiwan.puck.conf/conf])
-                  (mount/with-args options)
-                  mount/start)
-              (generate-content :page)
-              (generate-content :post)))
+          (-> (mount/only [#'me.yiwan.puck.conf/conf
+                           #'me.yiwan.puck.generate/generate])
+              (mount/with-args options)
+              mount/start))
         (catch Exception e
           (throw e))))))

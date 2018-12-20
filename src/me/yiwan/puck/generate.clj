@@ -1,6 +1,7 @@
 (ns me.yiwan.puck.generate
   (:require [clojure.java.io :as io]
             [me.raynes.fs :as fs]
+            [mount.core :refer [defstate]]
             [me.yiwan.puck.conf :refer [conf]]
             [me.yiwan.puck.html :refer [generate-html]]))
 
@@ -27,3 +28,6 @@
           output-file (find-output-file dir input-file-name ".html")]
       (spit output-file (generate-html (slurp input-file)))
       (println (format "generate: %s" (.getPath output-file))))))
+
+(defstate generate :start {:page (generate-content :page)
+                           :post (generate-content :post)})
