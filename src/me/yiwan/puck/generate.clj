@@ -25,4 +25,5 @@
   (doseq [input-file (find-files dir #".*\.md$")]
     (let [input-file-name (fs/base-name input-file true)
           output-file (find-output-file dir input-file-name ".html")]
-      (spit output-file (generate-html (slurp input-file))))))
+      (spit output-file (generate-html (slurp input-file)))
+      (println (format "generate: %s" (.getPath output-file))))))
