@@ -8,6 +8,7 @@
             me.yiwan.puck.conf
             me.yiwan.puck.init
             me.yiwan.puck.generate
+            me.yiwan.puck.http
             [mount.core :as mount]))
 
 ;; conf used at compile time
