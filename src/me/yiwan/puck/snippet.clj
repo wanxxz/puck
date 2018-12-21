@@ -70,5 +70,6 @@
           [:title] (enlive/content (:title (:meta h))))
          args))
 
-(defstate snippet :start (doseq [f (find-snippet-files)]
-                           (create-snippet-function (fs/base-name f true) f)))
+(defstate snippet :start (do (snippet-head)
+                             (snippet-post-list)
+                             (doseq [f (find-snippet-files)] (create-snippet-function (fs/base-name f true) f))))

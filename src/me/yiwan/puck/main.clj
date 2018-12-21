@@ -77,8 +77,10 @@
               (mount/with-args options)
               mount/start)
           "generate"
-          (-> (mount/only [#'me.yiwan.puck.conf/conf
-                           #'me.yiwan.puck.generate/generate])
+          (-> (mount/except [#'me.yiwan.puck.init/init
+                             #'me.yiwan.puck.check/check
+                             #'me.yiwan.puck.watch/watch
+                             #'me.yiwan.puck.http/http])
               (mount/with-args options)
               mount/start))
         (catch Exception e
