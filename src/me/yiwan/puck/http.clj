@@ -17,9 +17,8 @@
                      (str ".html"))))))
 
 (defn resolve-path
-  ;; take vector of keyword of dir conf-name, check conf.edn
-  ;; e.g. [:root :post]
-  ;; return a string path
+  "take vector of dir keywords from conf.edn, e.g. [:root :post]
+  return a string path"
   [v]
   (->> (map #(-> conf :dir %) v)
        (into [(:wd conf)])
