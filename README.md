@@ -69,4 +69,4 @@ CLI
 
 Credits
 -------
-- [Hitman](https://github.com/chameco/Hitman) Samuel Breese
+- [Hitman](https://github.com/chameco/Hitman) - Samuel Breese
