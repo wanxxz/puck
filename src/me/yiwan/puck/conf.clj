@@ -9,6 +9,6 @@
                             d (some-> a :working-directory)
                             f (some-> d (io/file n))]
                         (cond
-                          f (load-config :resource n :file f :merge [{:wd d}])
+                          (fs/file? f) (load-config :resource n :file f :merge [{:wd d}])
                           a (load-config :resource n :merge [{:wd d}])
                           :else (load-config :resource n))))
