@@ -38,19 +38,19 @@ Directory
    |
    |-- files        zip, tar.gz etc.
    |
-   |-- pages        .md files, e.g. home.md 404.md
+   |-- pages        md files, e.g. homemd 404md
    |
-   |-- posts        .md files, e.g. 2018-11-01-foo-bar.md
+   |-- posts        md files, e.g. 2018-11-01-foo-barmd
    |
-   |-- snippets     .html files, e.g. head.html post-list.html
+   |-- snippets     html files, e.g. head.html post-list.html
    |
-   |-- templates    .html files, e.g. post.html page.html
+   |-- templates    html files, e.g. post.html page.html
    |
    |-- www          HTTP server root
      |
-     |-- pages      .html files, pages/home.md > pages/home.html
+     |-- pages      html files, pages/homemd > pages/home.html
      |
-     |-- posts      .html files, posts/2018-11-01-foo-bar.md > posts/2018-11-01-foo-bar.html
+     |-- posts      html files, posts/2018-11-01-foo-barmd > posts/2018-11-01-foo-bar.html
 ```
 
 URL
