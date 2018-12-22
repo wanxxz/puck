@@ -55,9 +55,13 @@ Directory
 
 URL
 ---
-- `/posts`          posts, e.g. `/posts/2018-11-01-foo-bar.html` by `dir/www/posts/2018-11-01-foo-bar.html`
-- `/`               index, by `dir/www/pages/home.html`
-- `/404.html`       not-found page, by `dir/www/pages/404.html`
+```
+/posts          posts, e.g. /posts/2018-11-01-foo-bar.html by dir/www/posts/2018-11-01-foo-bar.html
+
+/               index, by dir/www/pages/home.html
+
+/404.html       not-found page, by dir/www/pages/404.html
+```
 
 CLI
 ---
