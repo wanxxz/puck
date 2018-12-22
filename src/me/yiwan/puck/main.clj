@@ -6,13 +6,11 @@
             [me.raynes.fs :as fs]
             me.yiwan.puck.check
             me.yiwan.puck.conf
-            me.yiwan.puck.init
             me.yiwan.puck.generate
             me.yiwan.puck.http
+            me.yiwan.puck.init
+            me.yiwan.puck.watch
             [mount.core :as mount]))
-
-;; conf used at compile time
-(mount/start #'me.yiwan.puck.conf/conf)
 
 (defn usage [options-summary]
   (->> ["Puck, a simple markdown bloging tool"
@@ -32,7 +30,7 @@
 
 (def cli-options [["-w" "--working-directory path" "Wroking directory"
                    :default (.getAbsolutePath fs/*cwd*)
-                   :parse-fn #(.getAbsolutePath (io/file %))
+                   :parse-fn #(.getCanonicalPath (io/file %))
                    :validate [#(fs/directory? %) "not a directory"]]
                   ["-h" "--help"]])
 
@@ -63,8 +61,9 @@
       (try
         (case action
           "start"
-          (-> (mount/except [#'me.yiwan.puck.init/init
-                             #'me.yiwan.puck.check/check])
+          (-> (mount/only [#'me.yiwan.puck.conf/conf
+                           #'me.yiwan.puck.watch/watch
+                           #'me.yiwan.puck.http/http])
               (mount/with-args options)
               mount/start)
           "init"
@@ -78,10 +77,8 @@
               (mount/with-args options)
               mount/start)
           "generate"
-          (-> (mount/except [#'me.yiwan.puck.init/init
-                             #'me.yiwan.puck.check/check
-                             #'me.yiwan.puck.watch/watch
-                             #'me.yiwan.puck.http/http])
+          (-> (mount/only [#'me.yiwan.puck.conf/conf
+                           #'me.yiwan.puck.generate/generate])
               (mount/with-args options)
               mount/start))
         (catch Exception e
