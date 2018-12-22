@@ -54,6 +54,7 @@
 (defstate init :start (do (create-directory)
                           (copy-resource "templates" #".*\.html$")
                           (copy-resource "snippets" #".*\.html$")
+                          (copy-resource "assets" #".*\.(css|jpg|png|gif)$")
                           (copy-resource "pages" #".*\.md$")
                           (copy-resource "posts" #".*\.md$")
                           (copy-resource "conf.edn")))

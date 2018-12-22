@@ -9,7 +9,6 @@
 (defn page-handler
   [n]
   (fn [& args]
-    (println args)
     (-> (io/file (:wd conf)
                  (-> conf :dir :root)
                  (-> conf :dir :page)
@@ -17,16 +16,21 @@
                      (str ".html"))))))
 
 (defn resolve-path
-  [d]
-  (-> (io/file (:wd conf)
-               (-> conf :dir :root)
-               (-> conf :dir d))
-      .getPath))
+  ;; take vector of keyword of dir conf-name, check conf.edn
+  ;; e.g. [:root :post]
+  ;; return a string path
+  [v]
+  (->> (map #(-> conf :dir %) v)
+       (into [(:wd conf)])
+       (apply io/file)
+       .getPath))
 
 (defroutes app
   (GET "/" [] (page-handler :index))
-  (files "/" {:root (resolve-path :page)})
-  (files "/posts" {:root (resolve-path :post)})
+  (files "/" {:root (resolve-path [:root :page])})
+  (files "/posts" {:root (resolve-path [:root :post])})
+  (files "/assets" {:root (resolve-path [:asset])})
+  (files "/files" {:root (resolve-path [:file])})
   (not-found (page-handler :not-found)))
 
 (defstate http
