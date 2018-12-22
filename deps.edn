@@ -10,6 +10,7 @@
         cprop                   {:mvn/version "0.1.13"}
         hawk                    {:mvn/version "0.2.11"}
         ring/ring-core          {:mvn/version "1.6.3"}
+        ring/ring-defaults      {:mvn/version "0.3.2"}
         ring/ring-jetty-adapter {:mvn/version "1.6.3"}
         compojure               {:mvn/version "1.6.1"}}
 

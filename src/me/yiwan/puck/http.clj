@@ -1,5 +1,6 @@
 (ns me.yiwan.puck.http
   (:require [clojure.java.io :as io]
+            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.adapter.jetty :refer [run-jetty]]
             [compojure.core :refer [GET routes]]
             [compojure.route :refer [not-found files]]
@@ -27,12 +28,14 @@
 
 (defn create-site
   []
-  (routes (GET "/" [] (page-handler :index))
-          (files "/" {:root (resolve-path [:root :page])})
-          (files "/posts" {:root (resolve-path [:root :post])})
-          (files "/assets" {:root (resolve-path [:asset])})
-          (files "/files" {:root (resolve-path [:file])})
-          (not-found (page-handler :not-found))))
+  (wrap-defaults
+   (routes (GET "/" [] (page-handler :index))
+           (files "/" {:root (resolve-path [:root :page])})
+           (files "/posts" {:root (resolve-path [:root :post])})
+           (files "/assets" {:root (resolve-path [:asset])})
+           (files "/files" {:root (resolve-path [:file])})
+           (not-found (page-handler :not-found)))
+   (assoc site-defaults :cookies false :session false)))
 
 (defstate http
   :start (run-jetty (create-site) {:join? false :port (:port conf)})
