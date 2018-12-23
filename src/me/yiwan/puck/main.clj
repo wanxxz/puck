@@ -40,14 +40,15 @@
 
 (defn validate-args
   [args]
-  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
+  (let [{:keys [options arguments errors summary]}
+        (parse-opts args cli-options)]
     (cond
       (:help options)
       {:exit-message (usage summary)}
       errors
       {:exit-message (error-msg errors)}
       (empty? arguments)
-      {:exit-message "missing a action: (start init check)"}
+      {:exit-message "missing a action: (start init check generate)"}
       (and (= 1 (count arguments))
            (#{"start" "init" "check" "generate"} (first arguments)))
       {:action (first arguments) :options options}
