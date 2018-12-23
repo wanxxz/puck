@@ -29,8 +29,8 @@
        (string/join \newline)))
 
 (def cli-options [["-w" "--working-directory path" "Wroking directory"
-                   :default (.getAbsolutePath fs/*cwd*)
-                   :parse-fn #(.getCanonicalPath (io/file %))
+                   :default (.getPath fs/*cwd*)
+                   :parse-fn #(.getPath (io/file %))
                    :validate [#(fs/directory? %) "not a directory"]]
                   ["-h" "--help"]])
 
@@ -62,9 +62,9 @@
       (try
         (case action
           "start"
-          (-> (mount/only [#'me.yiwan.puck.conf/conf
-                           #'me.yiwan.puck.watch/watch
-                           #'me.yiwan.puck.http/http])
+          (-> (mount/except [#'me.yiwan.puck.init/init
+                             #'me.yiwan.puck.check/check
+                             #'me.yiwan.puck.generate/generate])
               (mount/with-args options)
               mount/start)
           "init"
@@ -78,8 +78,10 @@
               (mount/with-args options)
               mount/start)
           "generate"
-          (-> (mount/only [#'me.yiwan.puck.conf/conf
-                           #'me.yiwan.puck.generate/generate])
+          (-> (mount/except [#'me.yiwan.puck.init/init
+                             #'me.yiwan.puck.check/check
+                             #'me.yiwan.puck.http/http
+                             #'me.yiwan.puck.watch/watch])
               (mount/with-args options)
               mount/start))
         (catch Exception e
