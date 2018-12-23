@@ -3,36 +3,36 @@
         org.clojure/clojure     {:mvn/version "1.10.0"}
         org.clojure/tools.cli   {:mvn/version "0.4.1"}
         me.raynes/fs            {:mvn/version "1.4.6"}
-        instaparse              {:mvn/version "1.4.9"}
+        instaparse              {:mvn/version "1.4.10"}
         hiccup                  {:mvn/version "1.0.5"}
         enlive                  {:mvn/version "1.1.6"}
         mount                   {:mvn/version "0.1.15"}
         cprop                   {:mvn/version "0.1.13"}
         hawk                    {:mvn/version "0.2.11"}
         aleph                   {:mvn/version "0.4.6"}
-        ring/ring-core          {:mvn/version "1.6.3"}
+        ring/ring-core          {:mvn/version "1.7.1"}
         ring/ring-defaults      {:mvn/version "0.3.2"}
         compojure               {:mvn/version "1.6.1"}}
 
  :paths ["src" "resources" "test"]
 
- :aliases {:main     {:main-opts ["-m" "me.yiwan.puck.main"]}
+ :aliases {:main  {:main-opts ["-m" "me.yiwan.puck.main"]}
 
-           :rebel    {:extra-deps {com.bhauman/rebel-readline {:mvn/version "0.1.4"}}
+           :rebel {:extra-deps {com.bhauman/rebel-readline {:mvn/version "0.1.4"}}
 
-                      :main-opts  ["-m" "rebel-readline.main"]}
+                   :main-opts  ["-m" "rebel-readline.main"]}
 
-           :nrepl    {:extra-deps {org.clojure/tools.namespace {:mvn/version "0.2.11"}
-                                   cider/cider-nrepl           {:mvn/version "0.18.0"}
-                                   refactor-nrepl              {:mvn/version "2.4.0"}}
+           :nrepl {:extra-deps {org.clojure/tools.namespace {:mvn/version "0.2.11"}
+                                cider/cider-nrepl           {:mvn/version "0.18.0"}
+                                refactor-nrepl              {:mvn/version "2.4.0"}}
 
-                      :main-opts  ["-m" "nrepl.cmdline"
-                                   "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}
+                   :main-opts  ["-m" "nrepl.cmdline"
+                                "--middleware" "[cider.nrepl/cider-middleware,refactor-nrepl.middleware/wrap-refactor]"]}
 
-           :outdated {:extra-deps {olical/depot {:mvn/version "1.5.0"}}
+           :depot {:extra-deps {olical/depot {:mvn/version "1.5.0"}}
 
-                      :main-opts  ["-m" "depot.outdated.main"]}
+                   :main-opts  ["-m" "depot.outdated.main"]}
 
-           :fmt      {:extra-deps {cljfmt {:mvn/version "0.6.1"}}
+           :fmt   {:extra-deps {cljfmt {:mvn/version "0.6.1"}}
 
-                      :main-opts  ["-m" "cljfmt.main" "fix"]}}}
+                   :main-opts  ["-m" "cljfmt.main" "fix"]}}}
