@@ -5,33 +5,23 @@
             [me.yiwan.puck.conf :refer [conf]]
             [mount.core :refer [args defstate]]))
 
-(defn root?
+(defn post?
   [dir]
-  (= dir (-> conf :dir :root)))
+  (= dir (-> conf :dir :post)))
 
-(defn template?
+(defn page?
   [dir]
-  (= dir (-> conf :dir :template)))
+  (= dir (-> conf :dir :page)))
 
-(defn snippet?
-  [dir]
-  (= dir (-> conf :dir :snippet)))
-
-(defn pages?
-  [dir]
-  (= dir (-> conf :dir :pages)))
-
-(defn create-directory
+(defn create-root-dirs
   []
-  (let [dirs (-> conf :dir vals)
-        dirs (filter #(-> % root? not) dirs)]
-
+  (let [dirs (-> conf :dir vals)]
     ;; create dirs under working dir
     (doseq [dir dirs]
       (.mkdirs (io/file (:wd conf) dir)))
 
-    ;; create dirs under 'www'
-    (let [dirs (filter #(and (-> % template? not) (-> % snippet? not) (-> % pages? not)) dirs)]
+    ;; create dirs under root
+    (let [dirs (filter #(or (page? %) (post? %)) dirs)]
       (doseq [dir dirs]
         (.mkdirs (io/file (:wd conf) (-> conf :dir :root) dir))))))
 
@@ -51,7 +41,7 @@
         (let [file-name (.getName file)]
           (safe-copy file (io/file (:wd conf) dir file-name)))))))
 
-(defstate init :start (do (create-directory)
+(defstate init :start (do (create-root-dirs)
                           (copy-resource "templates" #".*\.html$")
                           (copy-resource "snippets" #".*\.html$")
                           (copy-resource "assets" #".*\.(css|jpg|png|gif)$")
