@@ -37,5 +37,6 @@
    (assoc site-defaults :cookies false :session false)))
 
 (defstate http
-  :start (aleph/start-server (create-site) {:port (:port conf)})
+  :start (do (println (format "http server start, port: %s" (:port conf)))
+             (aleph/start-server (create-site) {:port (:port conf)}))
   :stop (.close http))

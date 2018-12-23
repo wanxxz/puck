@@ -1,5 +1,6 @@
 (ns me.yiwan.puck.watch
   (:require [clojure.java.io :as io]
+            [clojure.string :refer [join]]
             [hawk.core :as hawk]
             [me.raynes.fs :as fs]
             [me.yiwan.puck.conf :refer [conf]]
@@ -23,8 +24,9 @@
                   (spit f (generate-html (slurp (:file e))))))}]))
 
 (defstate watch
-  :start {:post (create-watcher (-> conf :dir :post) ".md")
-          :page (create-watcher (-> conf :dir :page) ".md")}
+  :start (do (println (format "watching directories: %s" (join ", " (mapv #(-> conf :dir %) [:post :page]))))
+             {:post (create-watcher (-> conf :dir :post) ".md")
+              :page (create-watcher (-> conf :dir :page) ".md")})
 
   :stop  (do
            (hawk/stop! (:post watch))
