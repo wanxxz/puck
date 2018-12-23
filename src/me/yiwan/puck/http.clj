@@ -1,7 +1,7 @@
 (ns me.yiwan.puck.http
   (:require [clojure.java.io :as io]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [ring.adapter.jetty :refer [run-jetty]]
+            [aleph.http :as aleph]
             [compojure.core :refer [GET routes]]
             [compojure.route :refer [not-found files]]
             [mount.core :refer [defstate]]
@@ -37,5 +37,5 @@
    (assoc site-defaults :cookies false :session false)))
 
 (defstate http
-  :start (run-jetty (create-site) {:join? false :port (:port conf)})
-  :stop (.stop http))
+  :start (aleph/start-server (create-site) {:port (:port conf)})
+  :stop (.close http))

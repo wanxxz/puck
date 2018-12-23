@@ -9,9 +9,9 @@
         mount                   {:mvn/version "0.1.15"}
         cprop                   {:mvn/version "0.1.13"}
         hawk                    {:mvn/version "0.2.11"}
+        aleph                   {:mvn/version "0.4.6"}
         ring/ring-core          {:mvn/version "1.6.3"}
         ring/ring-defaults      {:mvn/version "0.3.2"}
-        ring/ring-jetty-adapter {:mvn/version "1.6.3"}
         compojure               {:mvn/version "1.6.1"}}
 
  :paths ["src" "resources" "test"]
