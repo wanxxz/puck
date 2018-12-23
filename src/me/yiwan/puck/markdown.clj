@@ -11,7 +11,7 @@
      Metavalue = Word (Whitespace Word)*
      <Metamarker> = <#'[-]{3}'> EOL
      <Colon> = <':'>
-     <Content> = (Paragraph | Header | List | Ordered | Code | Rule)*
+     <Content> = (Paragraph | Header | List | Ordered | Code | Rule | Quote)*
      Header = Line Headerline Blankline+
      <Headerline> = h1 | h2
      h1 = '='+
@@ -27,6 +27,8 @@
      Rule = Ruleline Blankline+
      <Ruleline> = <'+'+ | '*'+ | '-'+>
      Paragraph = Line+ Blankline+
+     Quote = <Quotemarker> <Whitespace> Line+ Blankline+
+     Quotemarker = <'>'>
      <Blankline> = Whitespace* EOL
      <Line> = Linepre Word (Whitespace Word)* Linepost EOL
      <Linepre> = (Space (Space (Space)? )? )?
@@ -61,7 +63,8 @@
               :Header (hiccup/html [(first (last b)) (apply str (map generate-inlines (take (- (count b) 2) (drop 1 b))))])
               :Code (hiccup/html [:pre [:code (apply str (interpose "<br />" (for [line (drop 1 b)] (apply str (drop 1 line)))))]])
               :Rule (hiccup/html [:hr])
-              :Paragraph (hiccup/html [:p (apply str (map generate-inlines (drop 1 b)))])))))
+              :Paragraph (hiccup/html [:p (apply str (map generate-inlines (drop 1 b)))])
+              :Quote (hiccup/html [:blockquote (apply str (drop 1 b))])))))
 
 (defn meta-seq
   "take a seq, return a lazy-seq of maps, contains meta key and value"
