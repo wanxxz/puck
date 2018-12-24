@@ -69,7 +69,7 @@
 (defn meta-seq
   "take a seq, return a lazy-seq of maps, contains meta key and value"
   [meta]
-  (map #(hash-map (-> % second last keyword) (-> % last last)) meta))
+  (map #(hash-map (-> % second last keyword) (->> % last (drop 1) (into []) (reduce str))) meta))
 
 (defn meta-map
   "take a lazy-seq, return a @map, contains meta key and value, use last one for duplicate keys"
