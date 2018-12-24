@@ -29,5 +29,5 @@
       (println (format "generate: %s" (.getPath output-file)))
       (spit output-file (generate-html (slurp input-file))))))
 
-(defstate generate :start {:page (generate-content :page)
-                           :post (generate-content :post)})
+(defstate generate :start (do (generate-content :page)
+                              (generate-content :post)))
