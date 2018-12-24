@@ -32,48 +32,41 @@
 
 (defn create-snippet-function
   "create snippet function by user defined html files, at run time"
-  [name file]
-  (if (contains? preset name)
-    nil
-    (intern
-     'me.yiwan.puck.snippet
-     (symbol (str prefix name))
-     (enlive/snippet file
-                     [#{:head :body} :> :*]
-                     [& args]))))
+  [file]
+  (enlive/snippet file
+                  [#{:head :body} :> :*]
+                  [& args]))
 
-(defn create-snippet-post-list
+(defn snippet-post-list
   "post list snippet, show a list of post which contains title, date, or content field/s"
   []
-  (intern
-   'me.yiwan.puck.snippet
-   'snippet-post-list
-   (enlive/snippet
-    (find-snippet-files :name "post-list")
-    [#{:ul :ol}]
-    [& args]
-    [#{:ul :ol} [:li enlive/first-of-type]]
-    (enlive/clone-for [post (list-post)]
-                      [:a] (enlive/set-attr :href
-                                            (format "/%s/%s.html"
-                                                    (-> conf :dir :post)
-                                                    (:file post)))
-                      [:a :span.title] (enlive/content (:title post))
-                      [:a :span.date] (enlive/content (:date post))
-                      [:a :span.content] (enlive/html-content (:content post))))))
+  (enlive/snippet
+   (find-snippet-files :name "post-list")
+   [#{:ul :ol}]
+   [& args]
+   [#{:ul :ol} [:li enlive/first-of-type]]
+   (enlive/clone-for [post (list-post)]
+                     [:a] (enlive/set-attr :href
+                                           (format "/%s/%s.html"
+                                                   (-> conf :dir :post)
+                                                   (:file post)))
+                     [:a :span.title] (enlive/content (:title post))
+                     [:a :span.date] (enlive/content (:date post))
+                     [:a :span.content] (enlive/html-content (:content post)))))
 
-(defn create-snippet-head
+(defn snippet-head
   "head snippet, contains title meta link etc."
   []
-  (intern
-   'me.yiwan.puck.snippet
-   'snippet-head
-   (enlive/snippet
-    (find-snippet-files :name "head")
-    [:head :*]
-    [& {:keys [meta] :as h}]
-    [:title] (enlive/content (:title (:meta h))))))
+  (enlive/snippet
+   (find-snippet-files :name "head")
+   [:head :*]
+   [& {:keys [meta] :as h}]
+   [:title] (enlive/content (:title (:meta h)))))
 
-(defstate snippet :start (do (create-snippet-head)
-                             (create-snippet-post-list)
-                             (doseq [f (find-snippet-files)] (create-snippet-function (fs/base-name f true) f))))
+(defstate snippet :start (let [a (atom {})]
+                           (doseq [n preset]
+                             (swap! a assoc (keyword n) ((->> (str "snippet-" n) symbol (intern 'me.yiwan.puck.snippet)))))
+                           (doseq [f (->> (find-snippet-files) (filter #(contains? preset %)))]
+                             (swap! a assoc (keyword (fs/name f)) (create-snippet-function f)))
+                           @a)
+  :stop {})

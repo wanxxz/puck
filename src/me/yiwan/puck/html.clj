@@ -1,8 +1,9 @@
 (ns me.yiwan.puck.html
-  (:require [me.yiwan.puck.markdown
+  (:require [mount.core :refer [defstate]]
+            [me.yiwan.puck.template :refer [template]]
+            [me.yiwan.puck.markdown
              :refer
-             [generate-blocks meta-map meta-seq parse-content parse-meta]]
-            me.yiwan.puck.template))
+             [generate-blocks meta-map meta-seq parse-content parse-meta]]))
 
 (defn resolve-template-name
   "ignore duplicate, take last one"
@@ -15,19 +16,18 @@
 
 (defn resolve-template-function
   [n]
-  (let [s (symbol (str "template-" n))
-        t (ns-resolve 'me.yiwan.puck.template s)]
-    (if (nil? t)
+  (let [f ((keyword n) template)]
+    (if (nil? f)
       (println (format "template not found: %s" n))
-      t)))
+      f)))
 
-(defn generate-html
-  [txt]
-  (let [meta (parse-meta txt)]
-    (if (some? meta)
-      (let [content (-> txt parse-content generate-blocks)
-            template-function (some-> meta resolve-template-name resolve-template-function)]
-        (if (some? template-function)
-          (let [meta (-> meta meta-seq meta-map)]
-            (reduce str (template-function meta content))))))))
-
+(defstate generate-html :start
+  (fn
+    [txt]
+    (let [meta (parse-meta txt)]
+      (if (some? meta)
+        (let [content (-> txt parse-content generate-blocks)
+              template-function (some-> meta resolve-template-name resolve-template-function)]
+          (if (some? template-function)
+            (let [meta (-> meta meta-seq meta-map)]
+              (reduce str (template-function meta content)))))))))
