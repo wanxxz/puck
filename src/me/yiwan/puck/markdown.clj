@@ -11,7 +11,7 @@
      Metavalue = Word (Whitespace Word)*
      <Metamarker> = <#'[-]{3}'> EOL
      <Colon> = <':'>
-     <Content> = (Paragraph | Header | List | Ordered | Code | Rule | Quote)*
+     <Content> = (Paragraph | Header | List | Ordered | Rule | Quote)*
      Header = Line Headerline Blankline+
      <Headerline> = h1 | h2
      h1 = '='+
@@ -22,30 +22,32 @@
      Ordered = Orderedline+ Blankline+
      Orderedline = Orderedmarker Whitespace* Word (Whitespace Word)* EOL
      <Orderedmarker> = <#'[0-9]+\\.'>
-     Code = Codeline+ Blankline+
-     Codeline = <Space Space Space Space> (Whitespace | Word)* EOL
      Rule = Ruleline Blankline+
      <Ruleline> = <'+'+ | '*'+ | '-'+>
      Paragraph = Line+ Blankline+
      Quote = <Quotemarker> <Whitespace> Line+ Blankline+
      Quotemarker = <'>'>
      <Blankline> = Whitespace* EOL
-     <Line> = Linepre Word (Whitespace Word)* Linepost EOL
+     <Line> = Linepre (Word | Inline) (Whitespace (Word | Inline))* Linepost EOL
      <Linepre> = (Space (Space (Space)? )? )?
      <Linepost> = Space?
      <Whitespace> = #'(\\ | \\t)+'
      <Space> = ' '
      <Word> = #'\\S+'
+     <Inline> = Link | Img | Em | Strong | Code
+     <Link> = #'\\[.+?\\]\\(.+?\\)'
+     <Img> = #'!\\[.+?\\]\\(.+?\\)'
+     <Em> = #'[*]{1}.+?[*]{1}'
+     <Strong> = #'[*]{2}.+?[*]{2}'
+     <Code> = #'[`]{2}.+?[`]{2}'
      <EOL> = <'\\n'>"))
 
 (defn generate-inlines [str]
-  (let [inlines [[#"!\[(\S+)\]\((\S+)\)" (fn [[n href]] (hiccup/html [:img {:src href :alt n}]))]
-                 [#"\[(\S+)\]\((\S+)\)"  (fn [[n href]] (hiccup/html [:a {:href href} n]))]
-                 [#"`(\S+)`"             (fn [s] (hiccup/html [:code s]))]
-                 [#"\*\*(\S+)\*\*"       (fn [s] (hiccup/html [:strong s]))]
-                 [#"__(\S+)__"           (fn [s] (hiccup/html [:strong s]))]
-                 [#"\*(\S+)\*"           (fn [s] (hiccup/html [:em s]))]
-                 [#"_(\S+)_"             (fn [s] (hiccup/html [:em s]))]]
+  (let [inlines [[#"!\[(.+?)\]\((.+?)\)" (fn [[n href]] (hiccup/html [:img {:src href :alt n}]))]
+                 [#"\[(.+?)\]\((.+?)\)"  (fn [[n href]] (hiccup/html [:a {:href href} n]))]
+                 [#"``(.+?)``"           (fn [s] (hiccup/html [:code s]))]
+                 [#"\*\*(.+?)\*\*"       (fn [s] (hiccup/html [:strong s]))]
+                 [#"\*(.+?)\*"           (fn [s] (hiccup/html [:em s]))]]
 
         res (first (filter (complement nil?)
                            (for [[regex func] inlines]
