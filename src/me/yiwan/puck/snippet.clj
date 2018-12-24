@@ -57,7 +57,7 @@
                       [:a] (enlive/set-attr :href
                                             (format "/%s/%s.html"
                                                     (-> conf :dir :post)
-                                                    (:title post)))
+                                                    (:file post)))
                       [:a :span.title] (enlive/content (:title post))
                       [:a :span.date] (enlive/content (:date post))
                       [:a :span.content] (enlive/html-content (:content post))))))
