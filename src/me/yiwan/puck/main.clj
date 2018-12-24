@@ -63,8 +63,7 @@
         (case action
           "start"
           (-> (mount/except [#'me.yiwan.puck.init/init
-                             #'me.yiwan.puck.check/check
-                             #'me.yiwan.puck.generate/generate])
+                             #'me.yiwan.puck.check/check])
               (mount/with-args options)
               mount/start)
           "init"
