@@ -6,7 +6,6 @@
             [me.raynes.fs :as fs]
             me.yiwan.puck.check
             me.yiwan.puck.conf
-            me.yiwan.puck.generate
             me.yiwan.puck.http
             me.yiwan.puck.init
             me.yiwan.puck.watch
