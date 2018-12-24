@@ -78,7 +78,7 @@
   [s]
   (let [r (atom {})]
     (doseq [m s] (let [k (-> m keys last) v (-> m vals last)] (swap! r assoc k v)))
-    r))
+    @r))
 
 (defn parse-meta
   [str]

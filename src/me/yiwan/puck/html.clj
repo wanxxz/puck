@@ -28,6 +28,6 @@
       (let [content (-> txt parse-content generate-blocks)
             template-function (some-> meta resolve-template-name resolve-template-function)]
         (if (some? template-function)
-          (let [meta @(-> meta meta-seq meta-map)]
+          (let [meta (-> meta meta-seq meta-map)]
             (reduce str (template-function meta content))))))))
 
