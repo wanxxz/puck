@@ -1,0 +1,165 @@
+body {
+  font-family: "Merriweather", serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+a,
+a:link,
+a:hover,
+a:visited {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.home {
+  display: flex;
+  flex-direction: column;
+}
+.home > .title {
+  font-weight: bold;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 2em;
+  margin-bottom: 1em;
+  margin-top: 1em;
+  align-self: center;
+}
+.home > .title:hover {
+  position: relative;
+}
+.home > .title:hover:after {
+  position: absolute;
+  display: block;
+  content: "";
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-bottom-width: 1px;
+  border-bottom-style: dashed;
+  border-bottom-color: #ccc;
+}
+.home .post-list li {
+  display: flex;
+  align-items: center;
+}
+.home .post-list .date {
+  margin-right: 1em;
+}
+.home .post-list .title {
+  line-height: 2.5em;
+}
+.home .post-list .title,
+.home .post-list .title:link,
+.home .post-list .title:hover,
+.home .post-list .title:visited {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+}
+.home .post-list .title:after {
+  position: absolute;
+  display: block;
+  content: "";
+  bottom: 0.4em;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-bottom-width: 1px;
+  border-bottom-style: dashed;
+  border-bottom-color: #ccc;
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.about > .contact {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+}
+.about > .contact a svg {
+  display: block;
+  margin-right: 0.5em;
+  height: 1.1em;
+  width: 1.1em;
+}
+.about > .description {
+  margin-top: 0.5em;
+}
+
+.post > .title {
+  font-weight: bold;
+  font-family: "Droid Sans", sans-serif;
+  font-size: 1.2em;
+  margin-bottom: 2em;
+  margin-top: 1em;
+  text-align: center;
+}
+.post > .content {
+  max-width: 960px;
+}
+.post > .content a,
+.post > .content a:link,
+.post > .content a:hover,
+.post > .content a:visited {
+  color: inherit;
+  position: relative;
+}
+.post > .content a:after {
+  position: absolute;
+  display: block;
+  content: "";
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-bottom-width: 1px;
+  border-bottom-style: dashed;
+  border-bottom-color: #ccc;
+}
+.post > .content a.footnote {
+  text-decoration: underline;
+}
+.post > .content a.footnote:before,
+.post > .content a.footnote:after {
+  border: 0;
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+.post > .content .footnotes {
+  margin-left: -40px;
+  padding-left: 1em;
+  font-size: 0.8em;
+}
+.post > .content .footnotes .reversefootnote {
+  font-size: 0.8em;
+}
+.post > .content .footnotes .reversefootnote:before,
+.post > .content .footnotes .reversefootnote:after {
+  border: 0;
+}
+.post > .content blockquote {
+  margin: 0;
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+}
+.post > .content code {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  font-family: "Droid Sans", sans-serif;
+}
+.post > .content code:before,
+.post > .content code:after {
+  letter-spacing: 0.3em;
+  content: "\00a0";
+}
