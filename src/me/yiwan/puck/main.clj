@@ -9,6 +9,7 @@
             me.yiwan.puck.http
             me.yiwan.puck.init
             me.yiwan.puck.watch
+            me.yiwan.puck.generate
             [mount.core :as mount]))
 
 (defn usage [options-summary]
