@@ -30,10 +30,10 @@
     <Quotemarker> = <'> '>
     <Quoteline> = Word (Whitespace | Word)* EOL
     <Blankline> = Whitespace* EOL
-    <Line> = (Word | Inline) (Whitespace | (Word | Inline))* EOL
+    <Line> = (Word | Inline) (Whitespace (Word | Inline))* (EOL | Br)
     <Whitespace> = ' '+
     <Word> = #'\\S+'
-    <Inline> = Link | Img | Em | Strong | Code | Br
+    <Inline> = Link | Img | Em | Strong | Code
     <Link> = #'\\[.+?\\]\\(.+?\\)'
     <Img> = #'!\\[.+?\\]\\(.+?\\)'
     <Em> = #'[*]{1}.+?[*]{1}'
