@@ -26,11 +26,11 @@
     Rule = Ruleline Blankline+
     <Ruleline> = <'+'+ | '*'+ | '-'+>
     Paragraph = Line+ Blankline+
-    Quote = Quotemarker Quoteline+ Blankline+
-    <Quotemarker> = <'> '>
-    <Quoteline> = Word (Whitespace | Word)* EOL
     <Blankline> = Whitespace* EOL
     <Line> = (Word | Inline) (Whitespace (Word | Inline))* (EOL | Br)
+    Quote = Quotemarker Quoteline+ Blankline+
+    <Quotemarker> = <'> '>
+    <Quoteline> = Word (Whitespace Word)* EOL
     <Whitespace> = ' '+
     <Word> = #'\\S+'
     <Inline> = Link | Img | Em | Strong | Code
