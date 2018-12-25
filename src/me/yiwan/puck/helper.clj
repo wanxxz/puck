@@ -1,5 +1,5 @@
 (ns me.yiwan.puck.helper
-  (:require [clojure.string :refer [replace]]
+  (:require [clojure.string :as string]
             [clojure.java.io :as io]
             [clojure.set :refer [subset?]]
             [clojure.spec.alpha :as s]
@@ -22,7 +22,7 @@
                               #".*\.md$"))
         m (->> (sort-by :date m)
                reverse
-               (map #(->> (replace (:date %) #"-" "/")
+               (map #(->> (string/replace (:date %) #"-" "/")
                           (java.util.Date.)
                           (.format (java.text.SimpleDateFormat. "MMM d, y"))
                           (assoc % :date))))]
