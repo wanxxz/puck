@@ -20,7 +20,7 @@
         pat #".*\.html$"
         w (:wd conf)
         d (-> conf :dir :snippet)
-        wd (remove nil? [w d])
+        wd (->> (remove nil? [w d]) (into []))
         n (:name hm)
         ne (str n ext)
         r (-> (format "%s/%s" d ne) io/resource)]
@@ -50,9 +50,9 @@
                                            (format "/%s/%s.html"
                                                    (-> conf :dir :post)
                                                    (:file post)))
-                     [:a :span.title] (enlive/content (:title post))
-                     [:a :span.date] (enlive/content (:date post))
-                     [:a :span.content] (enlive/html-content (:content post)))))
+                     [:.title] (enlive/content (:title post))
+                     [:.date] (enlive/content (:date post))
+                     [:.content] (enlive/html-content (:content post)))))
 
 (defn snippet-head
   "head snippet, contains title meta link etc."
