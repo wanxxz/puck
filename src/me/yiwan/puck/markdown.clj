@@ -5,49 +5,50 @@
 (def parser
   (insta/parser
    "<Post> = Meta Content
-     <Meta> = (Metamarker Metaline+ Metamarker EOL)
-     Metaline = Metakey Colon <Space> Metavalue EOL
-     Metakey = #'[0-9a-zA-Z_]+'
-     Metavalue = Word (Whitespace Word)*
-     <Metamarker> = <#'[-]{3}'> EOL
-     <Colon> = <':'>
-     <Content> = (Paragraph | Header | List | Ordered | Rule | Quote)*
-     Header = Line Headerline Blankline+
-     <Headerline> = h1 | h2
-     h1 = '='+
-     h2 = '-'+
-     List = Listline+ Blankline+
-     Listline = Listmarker <Whitespace+> Word (Whitespace Word)* EOL
-     <Listmarker> = <'+' | '*' | '-'>
-     Ordered = Orderedline+ Blankline+
-     Orderedline = Orderedmarker Whitespace* Word (Whitespace Word)* EOL
-     <Orderedmarker> = <#'[0-9]+\\.'>
-     Rule = Ruleline Blankline+
-     <Ruleline> = <'+'+ | '*'+ | '-'+>
-     Paragraph = Line+ Blankline+
-     Quote = <Quotemarker> <Whitespace> Line+ Blankline+
-     Quotemarker = <'>'>
-     <Blankline> = Whitespace* EOL
-     <Line> = Linepre (Word | Inline) (Whitespace (Word | Inline))* Linepost EOL
-     <Linepre> = (Space (Space (Space)? )? )?
-     <Linepost> = Space?
-     <Whitespace> = #'(\\ | \\t)+'
-     <Space> = ' '
-     <Word> = #'\\S+'
-     <Inline> = Link | Img | Em | Strong | Code
-     <Link> = #'\\[.+?\\]\\(.+?\\)'
-     <Img> = #'!\\[.+?\\]\\(.+?\\)'
-     <Em> = #'[*]{1}.+?[*]{1}'
-     <Strong> = #'[*]{2}.+?[*]{2}'
-     <Code> = #'[`]{2}.+?[`]{2}'
-     <EOL> = <'\\n'>"))
-
+    <Meta> = (Metamarker Metaline+ Metamarker EOL)
+    Metaline = Metakey Colon <Whitespace> Metavalue EOL
+    Metakey = #'[0-9a-zA-Z_]+'
+    Metavalue = Word (Whitespace Word)*
+    <Metamarker> = <#'[-]{3}'> EOL
+    <Colon> = <':'>
+    <Space> = <' '>
+    <Content> = (Paragraph | Header | List | Ordered | Rule | Quote)*
+    Header = Line Headerline Blankline+
+    <Headerline> = h1 | h2
+    h1 = '='+
+    h2 = '-'+
+    List = Listline+ Blankline+
+    Listline = Listmarker <Whitespace+> Word (Whitespace Word)* EOL
+    <Listmarker> = <'+' | '*' | '-'>
+    Ordered = Orderedline+ Blankline+
+    Orderedline = Orderedmarker Whitespace* Word (Whitespace Word)* EOL
+    <Orderedmarker> = <#'[0-9]+\\.'>
+    Rule = Ruleline Blankline+
+    <Ruleline> = <'+'+ | '*'+ | '-'+>
+    Paragraph = Line+ Blankline+
+    Quote = Quotemarker Quoteline+ Blankline+
+    <Quotemarker> = <'> '>
+    <Quoteline> = Word (Whitespace | Word)* EOL
+    <Blankline> = Whitespace* EOL
+    <Line> = (Word | Inline) (Whitespace | (Word | Inline))* EOL
+    <Whitespace> = ' '+
+    <Word> = #'\\S+'
+    <Inline> = Link | Img | Em | Strong | Code | Br
+    <Link> = #'\\[.+?\\]\\(.+?\\)'
+    <Img> = #'!\\[.+?\\]\\(.+?\\)'
+    <Em> = #'[*]{1}.+?[*]{1}'
+    <Strong> = #'[*]{2}.+?[*]{2}'
+    <Code> = #'[`]{2}.+?[`]{2}'
+    <Br> = '  \\n'
+    <EOL> = <'\\n'>"))
+ 
 (defn generate-inlines [str]
   (let [inlines [[#"!\[(.+?)\]\((.+?)\)" (fn [[n href]] (hiccup/html [:img {:src href :alt n}]))]
                  [#"\[(.+?)\]\((.+?)\)"  (fn [[n href]] (hiccup/html [:a {:href href} n]))]
                  [#"``(.+?)``"           (fn [s] (hiccup/html [:code s]))]
                  [#"\*\*(.+?)\*\*"       (fn [s] (hiccup/html [:strong s]))]
-                 [#"\*(.+?)\*"           (fn [s] (hiccup/html [:em s]))]]
+                 [#"\*(.+?)\*"           (fn [s] (hiccup/html [:em s]))]
+                 [#"([\s]{2}[\n]{1})"    (fn [s] (hiccup/html [:br s]))]]
 
         res (first (filter (complement nil?)
                            (for [[regex func] inlines]
@@ -63,10 +64,9 @@
               :List (hiccup/html [:ul (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
               :Ordered (hiccup/html [:ol (for [li (drop 1 b)] [:li (apply str (map generate-inlines (drop 1 li)))])])
               :Header (hiccup/html [(first (last b)) (apply str (map generate-inlines (take (- (count b) 2) (drop 1 b))))])
-              :Code (hiccup/html [:pre [:code (apply str (interpose "<br />" (for [line (drop 1 b)] (apply str (drop 1 line)))))]])
               :Rule (hiccup/html [:hr])
               :Paragraph (hiccup/html [:p (apply str (map generate-inlines (drop 1 b)))])
-              :Quote (hiccup/html [:blockquote (apply str (drop 1 b))])))))
+              :Quote (hiccup/html [:blockquote (reduce str (drop 1 b))])))))
 
 (defn meta-seq
   "take a seq, return a lazy-seq of maps, contains meta key and value"
