@@ -18,7 +18,8 @@
                           :content (-> % slurp parse-content generate-blocks))
                (fs/find-files (.getPath (io/file (:wd conf)
                                                  (-> conf :dir :post)))
-                              #".*\.md$"))]
+                              #".*\.md$"))
+        m (-> (sort-by :date m) reverse)]
     (case s
       #{:title :date :content} m
       #{:title :content} (map #(hash-map :title (:title %) :file (:file %) :content (:content %)) m)
