@@ -33,12 +33,13 @@
     <Quoteline> = Word (Whitespace Word)* EOL
     <Whitespace> = ' '+
     <Word> = #'\\S+'
-    <Inline> = Link | Img | Em | Strong | Code
+    <Inline> = Link | Img | Em | Strong | Code | Del
     <Link> = #'\\[.+?\\]\\(.+?\\)'
     <Img> = #'!\\[.+?\\]\\(.+?\\)'
     <Em> = #'[*]{1}.+?[*]{1}'
     <Strong> = #'[*]{2}.+?[*]{2}'
     <Code> = #'[`]{2}.+?[`]{2}'
+    <Del> = #'[~]{2}.+?[~]{2}'
     <Br> = '  \\n'
     <EOL> = <'\\n'>"))
  
@@ -48,7 +49,8 @@
                  [#"``(.+?)``"           (fn [s] (hiccup/html [:code s]))]
                  [#"\*\*(.+?)\*\*"       (fn [s] (hiccup/html [:strong s]))]
                  [#"\*(.+?)\*"           (fn [s] (hiccup/html [:em s]))]
-                 [#"([\s]{2}[\n]{1})"    (fn [s] (hiccup/html [:br s]))]]
+                 [#"([\s]{2}[\n]{1})"    (fn [s] (hiccup/html [:br s]))]
+                 [#"~~(.+?)~~"           (fn [s] (hiccup/html [:del s]))]]
 
         res (first (filter (complement nil?)
                            (for [[regex func] inlines]
