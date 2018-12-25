@@ -34,6 +34,7 @@
                              (apply (list :meta meta))
                              enlive/substitute
                              (apply node)))
+                   [:div.title] (enlive/content (:title meta))
                    [:div.content] (enlive/html-content content)))
 
 (defn find-template-files
