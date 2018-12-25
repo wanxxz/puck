@@ -1,5 +1,6 @@
 (ns me.yiwan.puck.helper
-  (:require [clojure.java.io :as io]
+  (:require [clojure.string :refer [replace]]
+            [clojure.java.io :as io]
             [clojure.set :refer [subset?]]
             [clojure.spec.alpha :as s]
             [clojure.spec.test.alpha :as test]
@@ -19,7 +20,12 @@
                (fs/find-files (.getPath (io/file (:wd conf)
                                                  (-> conf :dir :post)))
                               #".*\.md$"))
-        m (-> (sort-by :date m) reverse)]
+        m (->> (sort-by :date m)
+               reverse
+               (map #(->> (replace (:date %) #"-" "/")
+                          (java.util.Date.)
+                          (.format (java.text.SimpleDateFormat. "MMM d, y"))
+                          (assoc % :date))))]
     (case s
       #{:title :date :content} m
       #{:title :content} (map #(hash-map :title (:title %) :file (:file %) :content (:content %)) m)
