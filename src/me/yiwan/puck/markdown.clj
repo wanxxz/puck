@@ -18,10 +18,10 @@
     h1 = '='+
     h2 = '-'+
     List = Listline+ Blankline+
-    Listline = Listmarker <Whitespace+> Word (Whitespace Word)* EOL
+    Listline = Listmarker <Whitespace+> (Word | Inline) (Whitespace (Word | Inline))* EOL
     <Listmarker> = <'+' | '*' | '-'>
     Ordered = Orderedline+ Blankline+
-    Orderedline = Orderedmarker Whitespace* Word (Whitespace Word)* EOL
+    Orderedline = Orderedmarker Whitespace* (Word | Inline) (Whitespace (Word | Inline))* EOL
     <Orderedmarker> = <#'[0-9]+\\.'>
     Rule = Ruleline Blankline+
     <Ruleline> = <'+'+ | '*'+ | '-'+>
