@@ -23,10 +23,15 @@
                   (spit f (generate-html (slurp (:file e))))))}]))
 
 (defstate watch
-  :start (do (println (format "watching directories: %s" (join ", " (mapv #(-> conf :dir %) [:post :page]))))
+  :start (do (println
+              (format "watching directories: %s"
+                      (join ", "
+                            (mapv #(-> conf :dir %)
+                                  [:post :page :template :snippet]))))
              {:post (create-watcher (-> conf :dir :post) ".md")
               :page (create-watcher (-> conf :dir :page) ".md")})
 
   :stop  (do
            (hawk/stop! (:post watch))
            (hawk/stop! (:page watch))))
+ 
