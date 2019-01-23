@@ -8,4 +8,5 @@
        :post "posts"         ;; markdown posts, posts/2018-12-01-foo.md => www/posts/2018-12-01-foo.html
        :page "pages"}        ;; markdown pages, pages/foo.md => www/foo.html
  :site {:index "home"        ;; pages/home.md => www/index.html
-        :not-found "404"}}
+        :not-found "404"}
+ :meta {:language "en"}}

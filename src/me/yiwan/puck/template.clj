@@ -34,6 +34,8 @@
                              (apply (list :meta meta))
                              enlive/substitute
                              (apply node)))
+                   [#{:head :body} enlive/any-node]
+                   (enlive/replace-vars (merge (:meta conf) meta))
                    [:div.title] (enlive/content (:title meta))
                    [:div.content] (enlive/html-content content)))
 
