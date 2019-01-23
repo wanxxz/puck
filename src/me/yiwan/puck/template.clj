@@ -48,6 +48,9 @@
 
 (defstate template :start (let [a (atom {})]
                             (doseq [f (find-template-files)]
-                              (swap! a assoc (keyword (fs/name f)) (create-template-function f)))
+                              (swap! a
+                                     assoc
+                                     (keyword (fs/name f))
+                                     (create-template-function f)))
                             @a)
   :stop {})
